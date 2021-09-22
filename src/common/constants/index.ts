@@ -1,5 +1,6 @@
 export const REDIS_EXPIRE_CLIENT = 'expirePost';
 export const REDIS_KEY_VOTE_UPDATES = 'votesUpdate';
+export const REDIS_KEY_CHILDREN_UPDATE = 'commentsCounterUpdate';
 
 export const MONGODB_WAIVIO_CONNECTION = 'MONGODB_WAIVIO_CONNECTION';
 

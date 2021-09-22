@@ -1,15 +1,16 @@
-import { REDIS_EXPIRE_CLIENT, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
+import { REDIS_EXPIRE_CLIENT, REDIS_KEY_CHILDREN_UPDATE, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
 import { HiveMindService } from '../common/hiveApi/hive-mind.service';
 import { PostsService } from '../post/post.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { RedisService } from 'nestjs-redis';
 import { Cron } from '@nestjs/schedule';
 import * as moment from 'moment'
-import * as _ from 'lodash'
+import * as _ from 'lodash';
 
 @Injectable()
 export class TasksService {
   private expirePostClient;
+  private readonly logger = new Logger(TasksService.name);
 
   constructor(
     private readonly postService: PostsService,
@@ -43,8 +44,25 @@ export class TasksService {
           postForUpdate.active_votes.push(dbVote);
         }
       });
-     await this.postService.updateOne(postForUpdate)
+     const res = await this.postService.updateOneByRoot(postForUpdate)
+      if(res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`)
     }
     await this.expirePostClient.del(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`)
+  }
+
+  @Cron('10 */1 * * *')
+  async updateChildrenOnPost(): Promise<void> {
+    const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format()
+    const records = await this.expirePostClient.smembers(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`)
+    for (const record of records) {
+      const [author, permlink] = record.split('/')
+      const comment = await this.hiveMindService.getPost(author, permlink)
+      if(!comment || !comment.root_author) continue;
+      const post = await this.hiveMindService.getPost(comment.root_author, comment.root_permlink)
+      if(!post || !post.author) continue;
+      const res = await this.postService.updateOneByRoot(_.pick(post, ['root_author', 'permlink', 'children']))
+      if(res.modifiedCount) this.logger.log(`Children on @${post.root_author}/${post.permlink} updated!`)
+    }
+    await this.expirePostClient.del(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`)
   }
 }

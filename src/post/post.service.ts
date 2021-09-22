@@ -20,10 +20,10 @@ export class PostsService {
     }
   }
 
-  async updateOne(data: Post): Promise<UpdateWriteOpResult> {
+  async updateOneByRoot(data: any): Promise<UpdateWriteOpResult> {
     try {
-      const { author, permlink } = data;
-      return this.postModel.updateOne({ author, permlink }, data, { upsert: true });
+      const { root_author, permlink } = data;
+      return this.postModel.updateOne({ root_author, permlink }, data);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
