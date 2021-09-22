@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  main:
+    container_name: waivio-cron-service
+    build: .
+    command: npm run start:prod
+    restart: always
+    network_mode: host
