@@ -1,8 +1,8 @@
-import {REDIS_EXPIRE_CLIENT, REDIS_KEY_VOTE_UPDATES} from "../common/constants";
-import {HiveMindService} from "../common/hiveApi/hive-mind.service";
-import {PostsService} from "../post/post.service";
+import { REDIS_EXPIRE_CLIENT, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
+import { HiveMindService } from '../common/hiveApi/hive-mind.service';
+import { PostsService } from '../post/post.service';
 import { Injectable } from '@nestjs/common';
-import {RedisService} from "nestjs-redis";
+import { RedisService } from 'nestjs-redis';
 import { Cron } from '@nestjs/schedule';
 import * as moment from 'moment'
 import * as _ from 'lodash'

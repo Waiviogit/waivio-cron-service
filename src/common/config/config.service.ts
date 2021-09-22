@@ -1,5 +1,5 @@
-import {RedisConfigInterface} from "./interfaces/redis-config.interface";
-import {ENSURE_VALUES, REDIS_EXPIRE_CLIENT} from "../constants";
+import { RedisConfigInterface } from './interfaces/redis-config.interface';
+import { ENSURE_VALUES, REDIS_EXPIRE_CLIENT } from '../constants';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: `env/${process.env.NODE_ENV || 'development'}.env` });

@@ -1,5 +1,5 @@
-import {MONGODB_WAIVIO_CONNECTION} from "../common/constants";
-import {configService} from '../common/config/config.service'
+import { MONGODB_WAIVIO_CONNECTION } from '../common/constants';
+import { configService } from '../common/config/config.service'
 import * as mongoose from 'mongoose';
 
 export const databaseProviders = [
