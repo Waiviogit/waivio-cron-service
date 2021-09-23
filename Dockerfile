@@ -1,28 +1,13 @@
-FROM node:14.17.6 as builder
+FROM node:14.17.6-alpine3.12
 
-ENV NODE_ENV build
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-RUN chown -Rh $user:$user /home/node
+COPY ./package.json ./
+COPY ./package-lock.json ./
 
-USER $user
-WORKDIR /home/node
+RUN npm install
+COPY . .
+RUN npm run build
 
-COPY . /home/node
-
-RUN npm ci \
-    && npm run build \
-    && npm prune --production
-# ---
-
-FROM node:14.17.6
-
-ENV NODE_ENV production
-
-USER node
-WORKDIR /home/node
-
-COPY --from=builder /home/node/package*.json /home/node/
-COPY --from=builder /home/node/node_modules/ /home/node/node_modules/
-COPY --from=builder /home/node/dist/ /home/node/dist/
-
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:prod"]
