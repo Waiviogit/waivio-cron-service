@@ -7,3 +7,5 @@ services:
     command: npm run start:prod
     restart: always
     network_mode: host
+    env_file:
+      - ./env/$NODE_ENV.env
