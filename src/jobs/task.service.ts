@@ -22,46 +22,54 @@ export class TasksService {
 
   @Cron('05 */1 * * *')
   async updateVotesOnPost(): Promise<void> {
-    const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format()
-    const posts = await this.expirePostClient.smembers(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`)
-    if(_.isEmpty(posts)) return
-    for (const post of posts) {
-      const [author, permlink] = post.split('/')
-      const postInDb = await this.postService.findOneByRootAuthorPermlink(author, permlink)
-      if (!postInDb) continue;
-      const postForUpdate = await this.hiveMindService.getPost(author, permlink)
-      if (!postForUpdate) continue;
+    const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
+    const posts = await this.expirePostClient.smembers(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`);
+    if(_.isEmpty(posts)) return;
+    try {
+      for (const post of posts) {
+        const [author, permlink] = post.split('/');
+        const postInDb = await this.postService.findOneByRootAuthorPermlink(author, permlink);
+        if (!postInDb) continue;
+        const postForUpdate = await this.hiveMindService.getPost(author, permlink);
+        if (!postForUpdate) continue;
 
-      postForUpdate.author = postInDb.author;
-      postForUpdate.active_votes = _.map(postForUpdate.active_votes, (vote) => ({
-        voter: vote.voter,
-        weight: Math.round(vote.rshares * 1e-6),
-        percent: vote.percent,
-        rshares: vote.rshares,
-      }));
-      _.forEach(postInDb.active_votes, (dbVote) => {
-        if (dbVote.voter.includes('_')) {
-          postForUpdate.active_votes.push(dbVote);
-        }
-      });
-     const res = await this.postService.updateOneByRoot(postForUpdate)
-      if(res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`)
+        postForUpdate.author = postInDb.author;
+        postForUpdate.active_votes = _.map(postForUpdate.active_votes, (vote) => ({
+          voter: vote.voter,
+          weight: Math.round(vote.rshares * 1e-6),
+          percent: vote.percent,
+          rshares: vote.rshares,
+        }));
+        _.forEach(postInDb.active_votes, (dbVote) => {
+          if (dbVote.voter.includes('_')) {
+            postForUpdate.active_votes.push(dbVote);
+          }
+        });
+        const res = await this.postService.updateOneByRoot(postForUpdate);
+        if(res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`);
+      }
+    } catch (error) {
+      this.logger.error(error.message);
     }
-    await this.expirePostClient.del(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`)
+    await this.expirePostClient.del(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`);
   }
 
   @Cron('20 */1 * * *')
   async updateChildrenOnPost(): Promise<void> {
     const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format()
     const records = await this.expirePostClient.smembers(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`)
-    for (const record of records) {
-      const [author, permlink] = record.split('/')
-      const comment = await this.hiveMindService.getPost(author, permlink)
-      if(!comment || !comment.root_author) continue;
-      const post = await this.hiveMindService.getPost(comment.root_author, comment.root_permlink)
-      if(!post || !post.author) continue;
-      const res = await this.postService.updateOneByRoot(_.pick(post, ['root_author', 'permlink', 'children']))
-      if(res.modifiedCount) this.logger.log(`Children on @${post.root_author}/${post.permlink} updated!`)
+    try {
+      for (const record of records) {
+        const [author, permlink] = record.split('/')
+        const comment = await this.hiveMindService.getPost(author, permlink)
+        if(!comment || !comment.root_author) continue;
+        const post = await this.hiveMindService.getPost(comment.root_author, comment.root_permlink)
+        if(!post || !post.author) continue;
+        const res = await this.postService.updateOneByRoot(_.pick(post, ['root_author', 'permlink', 'children']))
+        if(res.modifiedCount) this.logger.log(`Children on @${post.root_author}/${post.permlink} updated!`)
+      }
+    } catch (error) {
+      this.logger.error(error.message);
     }
     await this.expirePostClient.del(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`)
   }
