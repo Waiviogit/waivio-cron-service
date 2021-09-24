@@ -1,5 +1,5 @@
-import { MONGODB_WAIVIO_CONNECTION } from '../common/constants';
 import { Connection, Model } from 'mongoose';
+import { MONGODB_WAIVIO_CONNECTION } from '../common/constants';
 import { PostSchema } from './post.schema';
 import { POST_MODEL } from './constants';
 
