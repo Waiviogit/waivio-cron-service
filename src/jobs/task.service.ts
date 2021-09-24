@@ -50,7 +50,7 @@ export class TasksService {
     await this.expirePostClient.del(`${REDIS_KEY_VOTE_UPDATES}:${hourAgo}`)
   }
 
-  @Cron('10 */1 * * *')
+  @Cron('20 */1 * * *')
   async updateChildrenOnPost(): Promise<void> {
     const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format()
     const records = await this.expirePostClient.smembers(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`)
