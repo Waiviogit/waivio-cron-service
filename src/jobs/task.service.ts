@@ -4,8 +4,8 @@ import { Cron } from '@nestjs/schedule';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { PostsService } from '../post/post.service';
-import { HiveMindService } from '../common/hiveApi/hive-mind.service';
 import { REDIS_EXPIRE_CLIENT, REDIS_KEY_CHILDREN_UPDATE, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
+import { getPost } from '../common/hiveApi/hivemind';
 
 @Injectable()
 export class TasksService {
@@ -15,7 +15,6 @@ export class TasksService {
   constructor(
     private readonly postService: PostsService,
     private readonly redisService: RedisService,
-    private readonly hiveMindService: HiveMindService,
   ) {
     this.expirePostClient = this.redisService.getClient(REDIS_EXPIRE_CLIENT);
   }
@@ -30,7 +29,7 @@ export class TasksService {
         const [author, permlink] = post.split('/');
         const postInDb = await this.postService.findOneByRootAuthorPermlink(author, permlink);
         if (!postInDb) continue;
-        const postForUpdate = await this.hiveMindService.getPost(author, permlink);
+        const postForUpdate = await getPost(author, permlink);
         if (!postForUpdate) continue;
 
         postForUpdate.author = postInDb.author;
@@ -61,9 +60,9 @@ export class TasksService {
     try {
       for (const record of records) {
         const [author, permlink] = record.split('/');
-        const comment = await this.hiveMindService.getPost(author, permlink);
+        const comment = await getPost(author, permlink);
         if (!comment || !comment.root_author) continue;
-        const post = await this.hiveMindService.getPost(comment.root_author, comment.root_permlink);
+        const post = await getPost(comment.root_author, comment.root_permlink);
         if (!post || !post.author) continue;
         const res = await this.postService
           .updateOneByRoot(_.pick(post, ['root_author', 'permlink', 'children']));
