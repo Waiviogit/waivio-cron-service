@@ -1,7 +1,7 @@
+import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { postsProviders } from './post.providers';
 import { PostsService } from './post.service';
-import { Module } from '@nestjs/common';
 
 @Module({
   imports: [DatabaseModule],
@@ -12,6 +12,6 @@ import { Module } from '@nestjs/common';
   exports: [
     PostsService,
     ...postsProviders,
-  ]
+  ],
 })
 export class PostModule {}

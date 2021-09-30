@@ -63,15 +63,15 @@ export const PostSchema = new mongoose.Schema(
     allow_curation_rewards: { type: Boolean },
     allow_replies: { type: Boolean },
     beneficiaries: [{
-      account : { type: String },
-      weight : { type: Number }
-    }]
+      account: { type: String },
+      weight: { type: Number },
+    }],
   },
   {
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
     timestamps: true,
-  }
+  },
 );
 
 PostSchema.index({ author: 1, permlink: 1 }, { unique: true });
