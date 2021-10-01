@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import { PostsService } from '../post/post.service';
 import { REDIS_EXPIRE_CLIENT, REDIS_KEY_CHILDREN_UPDATE, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
-import { getPost } from '../common/hiveApi/hivemind';
+import { getPost } from '../common/hiveApi/hivenind-axios';
 
 @Injectable()
 export class TasksService {
