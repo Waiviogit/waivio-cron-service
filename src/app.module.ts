@@ -1,6 +1,6 @@
 import { ScheduleModule } from '@nestjs/schedule';
 import { Module } from '@nestjs/common';
-import { HiveMindService } from './common/hiveApi/hive-mind.service';
+import { HiveMindService } from './hiveApi/hive-mind.service';
 import { DatabaseModule } from './database/database.module';
 import { TasksService } from './jobs/task.service';
 import { PostModule } from './post/post.module';
