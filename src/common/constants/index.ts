@@ -14,6 +14,8 @@ export const RPC_NODES_HIVEMIND = [
   'https://hive-api.arcange.eu',
 ];
 
+export const HIVEMIND_NODE_DEFAULT = 'https://blocks.waivio.com:8082';
+
 export const ENSURE_VALUES = [
   'MONGO_HOST',
   'MONGO_PORT',
