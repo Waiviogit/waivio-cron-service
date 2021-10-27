@@ -20,6 +20,8 @@ export const PostSchema = new mongoose.Schema(
       voter: { type: String },
       weight: { type: Number },
       percent: { type: Number },
+      rsharesWAIV: { type: Number },
+      rshares: { type: Number },
     }],
     wobjects: [{
       author_permlink: { type: String },
@@ -58,6 +60,7 @@ export const PostSchema = new mongoose.Schema(
     children_abs_rshares: { type: Number },
     vote_rshares: { type: Number },
     net_rshares: { type: Number },
+    net_rshares_WAIV: { type: Number },
     abs_rshares: { type: Number },
     allow_votes: { type: Boolean },
     allow_curation_rewards: { type: Boolean },

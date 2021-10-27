@@ -24,3 +24,5 @@ export const ENSURE_VALUES = [
   'REDIS_PORT',
   'REDIS_DB_EXPIRE',
 ];
+
+export const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
