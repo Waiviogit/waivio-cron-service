@@ -7,7 +7,7 @@ import { Post } from '../post/interfaces/post.interface';
 @Injectable()
 export class HiveMindService {
   private readonly logger = new Logger(HiveMindService.name);
-  private readonly rpcNodes = RPC_NODES_HIVEMIND
+  private readonly rpcNodes = RPC_NODES_HIVEMIND;
   private currentNode = this.rpcNodes[0]
 
   private changeNode() {
@@ -18,14 +18,14 @@ export class HiveMindService {
     this.logger.error(`Node URL was changed to ${this.currentNode}`);
   }
 
-  async getPost(author: string, permlink: string):Promise<Post> {
+  private async hiveRequest(method: string, params: any):Promise<any> {
     try {
       const resp = await axios.post(
         this.currentNode,
         {
           jsonrpc: '2.0',
-          method: 'condenser_api.get_content',
-          params: [author, permlink],
+          method,
+          params,
           id: 1,
         },
         { timeout: 8000 },
@@ -40,5 +40,16 @@ export class HiveMindService {
       this.changeNode();
       return null;
     }
+  }
+
+  async getPost(author: string, permlink: string):Promise<Post> {
+    return this.hiveRequest('condenser_api.get_content', [author, permlink]);
+  }
+
+  async getDynamicGlobalProperties() {
+    return this.hiveRequest('condenser_api.get_reward_fund', ['post']);
+  }
+  async getCurrentPriceInfo() {
+    return this.hiveRequest('condenser_api.get_current_median_history_price', []);
   }
 }
