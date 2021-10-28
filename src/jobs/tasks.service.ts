@@ -4,7 +4,9 @@ import { Cron } from '@nestjs/schedule';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { PostsService } from '../post/post.service';
-import { REDIS_EXPIRE_CLIENT, REDIS_KEY_CHILDREN_UPDATE, REDIS_KEY_VOTE_UPDATES } from '../common/constants';
+import {
+  REDIS_EXPIRE_CLIENT, REDIS_KEY_CHILDREN_UPDATE, REDIS_KEY_VOTE_UPDATES, VOTE_FIELDS,
+} from '../common/constants';
 import { HiveMindService } from '../hiveApi/hive-mind.service';
 
 @Injectable()
@@ -34,12 +36,21 @@ export class TasksService {
       if (!postForUpdate) continue;
 
       postForUpdate.author = postInDb.author;
-      postForUpdate.active_votes = _.map(postForUpdate.active_votes, (vote) => ({
-        voter: vote.voter,
-        weight: Math.round(vote.rshares * 1e-6),
-        percent: vote.percent,
-        rshares: vote.rshares,
-      }));
+      postForUpdate.active_votes = _.reduce(postForUpdate.active_votes, (acc, item) => {
+        acc.push({
+          ..._
+            .chain(item)
+            .merge(_.pick(
+              _.find(postInDb.active_votes, { voter: item.voter }),
+              ['rsharesWAIV'],
+            ))
+            .pick(VOTE_FIELDS)
+            .value(),
+          weight: Math.round(item.rshares * 1e-6),
+        });
+        return acc;
+      },
+      []);
       _.forEach(postInDb.active_votes, (dbVote) => {
         if (dbVote.voter.includes('_')) {
           postForUpdate.active_votes.push(dbVote);
