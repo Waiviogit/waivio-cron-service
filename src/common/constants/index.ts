@@ -29,6 +29,8 @@ export const ENSURE_VALUES = [
   'REDIS_DB_EXPIRE',
 ];
 
+export const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
+
 export const REDIS_KEY_DISTRIBUTE_HIVE_ENGINE_REWARD = 'distributeHiveEngineReward';
 export const REDIS_KEY_REWARDED_AUTHORS = 'rewardedAuthors';
 
