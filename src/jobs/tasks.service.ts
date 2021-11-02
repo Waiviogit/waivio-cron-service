@@ -126,7 +126,7 @@ export class TasksService {
 
     const users = await this.userService.find(
       {
-        name: { $in: _.unique(_.map(postsList, 'author')) },
+        name: { $in: _.uniq(_.map(postsList, 'author')) },
         [TOKEN_WAIV.EXPERTISE_FIELD]: { $lt: rsharesFilter },
       },
       { [TOKEN_WAIV.EXPERTISE_FIELD]: 1, name: 1 },

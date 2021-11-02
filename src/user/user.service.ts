@@ -12,7 +12,7 @@ export class UserService {
     private userModel: Model<User>,
   ) {}
 
-  async find(filter: FilterQuery<any>, projection?: any | null, sort?: string | any): Promise<User> {
+  async find(filter: FilterQuery<any>, projection?: any | null, sort?: string | any): Promise<[User]> {
     try {
       return this.userModel.find(filter, projection).sort(sort).lean();
     } catch (error) {
