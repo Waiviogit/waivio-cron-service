@@ -96,7 +96,7 @@ export class TasksService {
     await this.expirePostClient.del(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`);
   }
 
-  @Cron('30 11 */1 * *')
+  @Cron('30 09 */1 * *')
   async voteOnHiveEnginePosts(): Promise<void> {
     if (process.env.NODE_ENV !== 'production') return;
     const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
