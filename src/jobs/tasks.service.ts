@@ -96,7 +96,7 @@ export class TasksService {
     await this.expirePostClient.del(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`);
   }
 
-  @Cron('30 09 */1 * *')
+  @Cron('30 11 */1 * *')
   async voteOnHiveEnginePosts(): Promise<void> {
     if (process.env.NODE_ENV !== 'production') return;
     const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
@@ -126,7 +126,7 @@ export class TasksService {
 
     const users = await this.userService.find(
       {
-        name: { $in: _.map(postsList, 'author') },
+        name: { $in: _.unique(_.map(postsList, 'author')) },
         [TOKEN_WAIV.EXPERTISE_FIELD]: { $lt: rsharesFilter },
       },
       { [TOKEN_WAIV.EXPERTISE_FIELD]: 1, name: 1 },
