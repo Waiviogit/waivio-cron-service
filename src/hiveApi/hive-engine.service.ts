@@ -60,4 +60,18 @@ export class HiveEngineService {
       (response) => _.get(response, 'data.result[0]'),
     );
   }
+
+  async getDieselPool(_id: number): Promise<any> {
+    const params = {
+      contract: 'marketpools',
+      table: 'pools',
+      query: { _id },
+    };
+    return this.hiveEngineRequest(
+      '/contracts',
+      'find',
+      params,
+      (response) => _.get(response, 'data.result[0]'),
+    );
+  }
 }

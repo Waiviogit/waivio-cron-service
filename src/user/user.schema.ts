@@ -85,6 +85,7 @@ export const UserSchema = new mongoose.Schema({
   json_metadata: { type: String, default: '' },
   posting_json_metadata: { type: String, default: '' },
   wobjects_weight: { type: Number, default: 0 },
+  expertiseWAIV: { type: Number, default: 0 },
   count_posts: { type: Number, default: 0, index: true },
   last_posts_count: { type: Number, default: 0 },
   last_posts_counts_by_hours: { type: [Number], default: [] },

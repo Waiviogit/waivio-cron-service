@@ -1,27 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as _ from 'lodash';
 import axios from 'axios';
-import { RPC_NODES_HIVEMIND } from '../common/constants';
+import { Client, PrivateKey } from '@hiveio/dhive';
+import { RPC_NODES_HIVEMIND, RPC_NODES_HIVED } from '../common/constants';
 import { Post } from '../post/interfaces/post.interface';
 
 @Injectable()
 export class HiveMindService {
   private readonly logger = new Logger(HiveMindService.name);
-  private readonly rpcNodes = RPC_NODES_HIVEMIND;
-  private currentNode = this.rpcNodes[0]
+  private readonly hiveMindNodes = RPC_NODES_HIVEMIND;
+  private readonly hivedNodes = RPC_NODES_HIVED;
+  private hiveMindNode = this.hiveMindNodes[0]
+  private hivedNode = this.hivedNodes[0]
+  private broadcastClient = new Client(RPC_NODES_HIVED, { failoverThreshold: 0, timeout: 10 * 1000 });
 
-  private changeNode() {
-    const index = this.rpcNodes.indexOf(this.currentNode);
-    this.currentNode = this.rpcNodes.length - 1 === index
-      ? this.rpcNodes[0]
-      : this.rpcNodes[index + 1];
-    this.logger.error(`Node URL was changed to ${this.currentNode}`);
+  private changeNode(api) {
+    const index = this[`${api}Nodes`].indexOf(this[`${api}Node`]);
+    this[`${api}Node`] = this[`${api}Nodes`].length - 1 === index
+      ? this[`${api}Nodes`][0]
+      : this[`${api}Nodes`][index + 1];
+    this.logger.error(`Node URL was changed to ${this[`${api}Node`]}`);
   }
 
-  private async hiveRequest(method: string, params: any):Promise<any> {
+  private async hiveRequest(
+    method: string, params: any, api = 'hiveMind',
+  ):Promise<any> {
     try {
       const resp = await axios.post(
-        this.currentNode,
+        this[`${api}Node`],
         {
           jsonrpc: '2.0',
           method,
@@ -31,13 +37,13 @@ export class HiveMindService {
         { timeout: 8000 },
       );
       if (_.has(_.get(resp, 'data'), 'error')) {
-        this.changeNode();
+        this.changeNode(api);
         return null;
       }
       return _.get(resp, 'data.result');
     } catch (err) {
       this.logger.error(err.message);
-      this.changeNode();
+      this.changeNode(api);
       return null;
     }
   }
@@ -51,5 +57,23 @@ export class HiveMindService {
   }
   async getCurrentPriceInfo() {
     return this.hiveRequest('condenser_api.get_current_median_history_price', []);
+  }
+
+  async getAccounts(accounts):Promise<any> {
+    return this.hiveRequest('condenser_api.get_accounts', [accounts], 'hived');
+  }
+
+  async vote({
+    voter, author, permlink, weight, key,
+  }) {
+    try {
+      const result = await this.broadcastClient.broadcast.vote({
+        voter, author, permlink, weight,
+      },
+      PrivateKey.fromString(key));
+      return { result: !!result };
+    } catch (error) {
+      return { error };
+    }
   }
 }

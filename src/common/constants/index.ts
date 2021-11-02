@@ -4,14 +4,23 @@ export const REDIS_KEY_CHILDREN_UPDATE = 'commentsCounterUpdate';
 
 export const MONGODB_WAIVIO_CONNECTION = 'MONGODB_WAIVIO_CONNECTION';
 
-export const RPC_NODES_HIVEMIND = [
-  // 'https://blocks.waivio.com:8082',
+const COMMON_NODES = [
   'https://anyx.io',
   'https://api.hive.blog',
   'https://api.openhive.network',
   'https://rpc.ausbit.dev',
   'https://rpc.ecency.com',
   'https://hive-api.arcange.eu',
+];
+
+export const RPC_NODES_HIVEMIND = [
+  'https://blocks.waivio.com:8082',
+  ...COMMON_NODES,
+];
+
+export const RPC_NODES_HIVED = [
+  'https://blocks.waivio.com',
+  ...COMMON_NODES,
 ];
 
 export const RPC_NODES_HIVE_ENGINE = [
@@ -32,12 +41,15 @@ export const ENSURE_VALUES = [
 export const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
 
 export const REDIS_KEY_DISTRIBUTE_HIVE_ENGINE_REWARD = 'distributeHiveEngineReward';
-export const REDIS_KEY_REWARDED_AUTHORS = 'rewardedAuthors';
 
-export const HIVE_ENGINE_TOKENS = {
-  WAIV: 'WAIV',
+export const TOKEN_WAIV = {
+  SYMBOL: 'WAIV',
+  POOL_ID: 13,
+  DIESEL_POOL_ID: 63,
+  WELCOME_USD_FILTER: 50,
+  EXPERTISE_FIELD: 'expertiseWAIV',
+  WELCOME_REDIS: `welcome${this.SYMBOL}`,
+  TAGS: ['waivio', 'neoxian', 'palnet'],
 };
 
-export const HIVE_ENGINE_TOKEN_PRICE = {
-  WAIV: 0.1,
-};
+export const DAILY_WEIGHT = 100000;
