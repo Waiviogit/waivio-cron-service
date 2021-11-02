@@ -96,7 +96,7 @@ export class TasksService {
     await this.expirePostClient.del(`${REDIS_KEY_CHILDREN_UPDATE}:${hourAgo}`);
   }
 
-  @Cron('00 11 */1 * *')
+  @Cron('30 11 */1 * *')
   async voteOnHiveEnginePosts(): Promise<void> {
     if (process.env.NODE_ENV !== 'production') return;
     const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
@@ -160,7 +160,7 @@ export class TasksService {
 
       await this.expirePostClient.sadd(welcomeKey, `${vote.author}/${vote.permlink}/${vote.weight}`);
       await this.expirePostClient.expire(welcomeKey, 345600);
-      this.logger.log(`success vote on ${post.author}/${post.permlink} weight: ${realWeight}`);
+      this.logger.log(`success vote on ${vote.author}/${vote.permlink} weight: ${vote.weight}`);
       await sleep(5000);
       spentWeight += realWeight;
       if (spentWeight >= DAILY_WEIGHT) return;
