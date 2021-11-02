@@ -44,9 +44,9 @@ export const TOKEN_WAIV = {
   SYMBOL: 'WAIV',
   POOL_ID: 13,
   DIESEL_POOL_ID: 63,
-  WELCOME_USD_FILTER: 50,
+  WELCOME_USD_FILTER: 30,
   WELCOME_DAILY_WEIGHT: 100000,
   EXPERTISE_FIELD: 'expertiseWAIV',
-  WELCOME_REDIS: `welcome${this.SYMBOL}`,
+  WELCOME_REDIS: 'welcomeWAIV',
   TAGS: ['waivio', 'neoxian', 'palnet'],
 };
