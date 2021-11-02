@@ -10,7 +10,6 @@ import {
   REDIS_KEY_CHILDREN_UPDATE,
   REDIS_KEY_VOTE_UPDATES,
   REDIS_EXPIRE_CLIENT,
-  DAILY_WEIGHT,
   VOTE_FIELDS,
   TOKEN_WAIV,
 } from '../common/constants';
@@ -139,7 +138,7 @@ export class TasksService {
     if (_.isEmpty(filteredPosts)) return;
 
     let spentWeight = 0;
-    const estimatedWeightOnPost = DAILY_WEIGHT / filteredPosts.length;
+    const estimatedWeightOnPost = TOKEN_WAIV.WELCOME_DAILY_WEIGHT / filteredPosts.length;
     const realWeight = estimatedWeightOnPost > 10000
       ? 10000
       : Math.ceil(estimatedWeightOnPost);
@@ -163,7 +162,7 @@ export class TasksService {
       this.logger.log(`success vote on ${vote.author}/${vote.permlink} weight: ${vote.weight}`);
       await sleep(5000);
       spentWeight += realWeight;
-      if (spentWeight >= DAILY_WEIGHT) return;
+      if (spentWeight >= TOKEN_WAIV.WELCOME_DAILY_WEIGHT) return;
     }
   }
 }

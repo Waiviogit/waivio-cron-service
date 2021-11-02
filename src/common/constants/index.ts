@@ -27,8 +27,6 @@ export const RPC_NODES_HIVE_ENGINE = [
   'https://api.hive-engine.com/rpc',
 ];
 
-export const HIVEMIND_NODE_DEFAULT = 'https://blocks.waivio.com:8082';
-
 export const ENSURE_VALUES = [
   'MONGO_HOST',
   'MONGO_PORT',
@@ -47,9 +45,8 @@ export const TOKEN_WAIV = {
   POOL_ID: 13,
   DIESEL_POOL_ID: 63,
   WELCOME_USD_FILTER: 50,
+  WELCOME_DAILY_WEIGHT: 100000,
   EXPERTISE_FIELD: 'expertiseWAIV',
   WELCOME_REDIS: `welcome${this.SYMBOL}`,
   TAGS: ['waivio', 'neoxian', 'palnet'],
 };
-
-export const DAILY_WEIGHT = 100000;
