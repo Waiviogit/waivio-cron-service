@@ -130,6 +130,10 @@ export class TasksService {
       },
       { [TOKEN_WAIV.EXPERTISE_FIELD]: 1, name: 1 },
     );
+    if (!users.length) {
+      return this.logger.error('problems with user request');
+    }
+    this.logger.log(`users filter: ${users.length}`);
     const filteredPosts = _
       .chain(postsList)
       .filter((el) => _.includes(_.map(users, 'name'), el.author))
