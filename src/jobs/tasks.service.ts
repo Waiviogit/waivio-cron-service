@@ -103,6 +103,8 @@ export class TasksService {
     const welcomeKey = `${TOKEN_WAIV.WELCOME_REDIS}:${moment.utc().startOf('day').format()}`;
 
     const records = await this.expirePostClient.smembers(postsKey);
+    const voted = await this.expirePostClient
+      .zrevrange(`${TOKEN_WAIV.CURATOR_VOTED}:${TOKEN_WAIV.SYMBOL}`, 0, -1);
 
     if (_.isEmpty(records)) return;
 
@@ -134,9 +136,15 @@ export class TasksService {
       return this.logger.error('problems with user request');
     }
     this.logger.log(`users filter: ${users.length}`);
+
     const filteredPosts = _
       .chain(postsList)
       .filter((el) => _.includes(_.map(users, 'name'), el.author))
+      .filter((el) => !_
+        .some(
+          _.map(voted, (vote) => ({ author: vote.split('/')[0], permlink: vote.split('/')[1] })),
+          (v) => v.author === el.author && v.permlink === el.permlink,
+        ))
       .uniqBy('author')
       .value();
     if (_.isEmpty(filteredPosts)) return;
@@ -146,6 +154,8 @@ export class TasksService {
     const realWeight = estimatedWeightOnPost > 10000
       ? 10000
       : Math.ceil(estimatedWeightOnPost);
+
+    const sleepTime = Math.floor(TOKEN_WAIV.WELCOME_DAILY_VOTE_TIME / filteredPosts.length);
 
     for (const post of filteredPosts) {
       const vote = {
@@ -164,7 +174,7 @@ export class TasksService {
       await this.expirePostClient.sadd(welcomeKey, `${vote.author}/${vote.permlink}/${vote.weight}`);
       await this.expirePostClient.expire(welcomeKey, 345600);
       this.logger.log(`success vote on ${vote.author}/${vote.permlink} weight: ${vote.weight}`);
-      await sleep(6000);
+      await sleep(sleepTime);
       spentWeight += realWeight;
       if (spentWeight >= TOKEN_WAIV.WELCOME_DAILY_WEIGHT) return;
     }
