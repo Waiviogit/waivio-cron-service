@@ -46,7 +46,9 @@ export const TOKEN_WAIV = {
   DIESEL_POOL_ID: 63,
   WELCOME_USD_FILTER: 25,
   WELCOME_DAILY_WEIGHT: 100000,
+  WELCOME_DAILY_VOTE_TIME: 20 * 60 * 60 * 1000, // 20 hours ms
   EXPERTISE_FIELD: 'expertiseWAIV',
   WELCOME_REDIS: 'welcomeWAIV',
+  CURATOR_VOTED: 'engineCuratorVoted',
   TAGS: ['waivio', 'neoxian', 'palnet'],
 };
