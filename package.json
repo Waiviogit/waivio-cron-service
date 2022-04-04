@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/schedule": "^1.0.1",
     "axios": "^0.22.0",
+    "check-disk-space": "^3.3.0",
     "dotenv": "^10.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
