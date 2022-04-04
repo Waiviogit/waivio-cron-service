@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as util from 'util';
 import checkDiskSpace from 'check-disk-space';
-import axios from 'axios';
 import { PostsService } from '../post/post.service';
 import {
   REDIS_KEY_DISTRIBUTE_HIVE_ENGINE_REWARD,
@@ -19,8 +18,8 @@ import { HiveMindService } from '../hiveApi/hive-mind.service';
 import { UserService } from '../user/user.service';
 import { HiveEngineService } from '../hiveApi/hive-engine.service';
 import { getGeckoPrice } from '../common/helpers/coingeckoHelper';
-import { telegramApi } from '../common/constants/telegram-api.constants';
 import { bytesConverterConstants } from '../common/constants/bytes-converter.constants';
+import { sendMessageToNotifierService } from '../common/helpers/messageToNotifierServiceHelper';
 
 const sleep = util.promisify(setTimeout);
 
@@ -184,7 +183,7 @@ export class TasksService {
     }
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_2_HOURS)
   async calculateFreeDiskSpace(): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
 
@@ -192,18 +191,6 @@ export class TasksService {
     const freeGb = (space.free / bytesConverterConstants.BYTES_IN_GIGABYTE)
       .toFixed(bytesConverterConstants.PRECISION);
 
-    if (+freeGb < 10) {
-      try {
-        await axios.post(
-          `${telegramApi.HOST}${telegramApi.BASE_URL}${telegramApi.CRON_MESSAGE}`,
-          {
-            cron_service_key: process.env.CRON_SERVICE_KEY,
-            message: `There is less than 10 GB of free space on the disk left on ${process.env.NODE_ENV}`,
-          },
-        );
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
+    if (+freeGb < 10) await sendMessageToNotifierService(`There is less than 10 GB of free space on the disk left on ${process.env.NODE_ENV}`);
   }
 }
