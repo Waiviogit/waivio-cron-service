@@ -191,6 +191,6 @@ export class TasksService {
     const freeGb = (space.free / bytesConverterConstants.BYTES_IN_GIGABYTE)
       .toFixed(bytesConverterConstants.PRECISION);
 
-    if (+freeGb < 10) await sendMessageToNotifierService(`There is less than 10 GB of free space on the disk left on ${process.env.NODE_ENV}`);
+    if (+freeGb < 22) await sendMessageToNotifierService(`There is ${freeGb} of free space on the disk left on ${process.env.NODE_ENV}`);
   }
 }
