@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RedisService } from 'nestjs-redis';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import * as util from 'util';
+import checkDiskSpace from 'check-disk-space';
 import { PostsService } from '../post/post.service';
 import {
   REDIS_KEY_DISTRIBUTE_HIVE_ENGINE_REWARD,
@@ -17,6 +18,8 @@ import { HiveMindService } from '../hiveApi/hive-mind.service';
 import { UserService } from '../user/user.service';
 import { HiveEngineService } from '../hiveApi/hive-engine.service';
 import { getGeckoPrice } from '../common/helpers/coingeckoHelper';
+import { bytesConverterConstants } from '../common/constants/bytes-converter.constants';
+import { sendMessageToNotifierService } from '../common/helpers/messageToNotifierServiceHelper';
 
 const sleep = util.promisify(setTimeout);
 
@@ -165,7 +168,7 @@ export class TasksService {
         weight: realWeight,
         key: process.env.WELCOME_BOT_KEY,
       };
-      const { result, error: voteError } = await this.hiveMindService.vote(vote);
+      const { error: voteError } = await this.hiveMindService.vote(vote);
       if (voteError) {
         this.logger.log(voteError.message);
         continue;
@@ -178,5 +181,16 @@ export class TasksService {
       spentWeight += realWeight;
       if (spentWeight >= TOKEN_WAIV.WELCOME_DAILY_WEIGHT) return;
     }
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  async calculateFreeDiskSpace(): Promise<void> {
+    if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
+
+    const space = await checkDiskSpace('/');
+    const freeGb = (space.free / bytesConverterConstants.BYTES_IN_GIGABYTE)
+      .toFixed(bytesConverterConstants.PRECISION);
+
+    if (+freeGb < 22) await sendMessageToNotifierService(`There is ${freeGb} of free space on the disk left on ${process.env.NODE_ENV}`);
   }
 }
