@@ -183,7 +183,7 @@ export class TasksService {
     }
   }
 
-  @Cron(CronExpression.EVERY_2_HOURS)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async calculateFreeDiskSpace(): Promise<void> {
     if (!['staging', 'production'].includes(process.env.NODE_ENV)) return;
 
