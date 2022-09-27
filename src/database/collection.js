@@ -20,5 +20,13 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    updateOne: async ({ filter, update, options = {} }) => {
+      try {
+        const result = await collection.updateOne(filter, update, options);
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
   };
 };

@@ -11,6 +11,16 @@ const get = async ({ key, client = db8Client }) => {
   }
 };
 
+const smembers = async ({ key, client = db8Client }) => {
+  try {
+    const result = await client.smembers(key);
+    return { result };
+  } catch (error) {
+    return { error };
+  }
+};
+
 module.exports = {
   get,
+  smembers,
 };

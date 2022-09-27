@@ -1,6 +1,6 @@
 const http = require('http');
 const client = require('./database/mongoConnection');
-require('./jobs/somejob/somejob');
+require('./jobs/jobs');
 
 const PORT = 9483;
 
