@@ -4,4 +4,5 @@ exports.DATABASE = {
 
 exports.COLLECTION = {
   POSTS: 'posts',
+  USERS: 'users',
 };

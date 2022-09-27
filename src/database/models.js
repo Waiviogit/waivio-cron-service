@@ -2,5 +2,6 @@ const collection = require('./collection');
 const { DATABASE, COLLECTION } = require('../constants/database');
 
 module.exports = {
-  postsModel: collection({ collectionName: COLLECTION.POSTS, dbName: DATABASE.WAIVIO }),
+  postModel: collection({ collectionName: COLLECTION.POSTS, dbName: DATABASE.WAIVIO }),
+  userModel: collection({ collectionName: COLLECTION.USERS, dbName: DATABASE.WAIVIO }),
 };
