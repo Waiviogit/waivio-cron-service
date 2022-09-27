@@ -15,7 +15,7 @@ const updateVotesOnPostJob = new CronJob(
     try {
       await updateVotesOnPost.run();
     } catch (error) {
-      console.log(error.message);
+      console.log(`${updateVotesOnPost} error.message`);
     }
   }, null, false, null, null, false,
 );
