@@ -7,7 +7,7 @@ const { REDIS_KEY } = require('../../constants/redis');
 
 const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
 
-exports.run = async () => {
+const run = async () => {
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
   const { result: posts } = await redisGetter.smembers({
     key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`,
@@ -56,4 +56,8 @@ exports.run = async () => {
     if (res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`);
   }
   await redisSetter.del(`${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`);
+};
+
+module.exports = {
+  run,
 };
