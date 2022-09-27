@@ -1,9 +1,11 @@
 const { CronJob } = require('cron');
-const { postsModel } = require('../../database/models');
+const { postModel } = require('../../database/models');
+const { redisGetter } = require('../../redis');
 
-console.log('kek');
-
-const cacheHivePrice = new CronJob('0 */1 * * * *', async () => {
-  const yo = await postsModel.find({ filter: { author: 'ctrl-news' } });
+const cacheHivePrice = new CronJob('*/10 * * * * *', async () => {
+  console.log('here');
+  const kek = await redisGetter.get({ key: 'test' });
+  const yo = await postModel.find({ filter: { author: 'ctrl-news' } });
   console.log();
 }, null, false, null, null, true);
+
