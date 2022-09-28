@@ -1,3 +1,7 @@
-const { updateVotesOnPostJob } = require('./jobs');
+const {
+  updatePostVotesJob,
+  updatePostChildrenJob,
+} = require('./jobs');
 
-updateVotesOnPostJob.start();
+updatePostVotesJob.start();
+updatePostChildrenJob.start();
