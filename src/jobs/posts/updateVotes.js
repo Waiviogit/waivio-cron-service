@@ -1,6 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
-const { redisGetter, redisSetter } = require('../../redis');
+const { expireClient } = require('../../redis');
 const { postModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
 const { REDIS_KEY } = require('../../constants/redis');
@@ -9,7 +9,7 @@ const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
 
 const run = async () => {
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
-  const { result: posts } = await redisGetter.smembers({
+  const { result: posts } = await expireClient.smembers({
     key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`,
   });
   if (_.isEmpty(posts)) return;
@@ -55,7 +55,7 @@ const run = async () => {
     });
     if (res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`);
   }
-  await redisSetter.del(`${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`);
+  await expireClient.del(`${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`);
 };
 
 module.exports = {

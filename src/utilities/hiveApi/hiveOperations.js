@@ -11,7 +11,6 @@ exports.likePost = async ({
       voter, author, permlink, weight,
     },
     PrivateKey.fromString(key));
-    console.log(`Successfully liked. Included in block: ${result.block_num}`);
     return { result: true };
   } catch (error) {
     return { error };

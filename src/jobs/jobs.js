@@ -2,6 +2,7 @@ const { CronJob } = require('cron');
 const noroutine = require('noroutine');
 const updateVotes = require('./posts/updateVotes');
 const updateChildren = require('./posts/updateChildren');
+const waivioWelcome = require('./bots/waivioWelcome');
 const { SCHEDULE } = require('../constants/cron');
 
 noroutine.init({
@@ -32,10 +33,20 @@ const updatePostChildrenJob = new CronJob(
     }
   }, null, false, null, null, false,
 );
-
 // endregion
+
+const waivioWelcomeJob = new CronJob(
+  SCHEDULE.WAIVIO_WELCOME, async () => {
+    try {
+      await waivioWelcome.run();
+    } catch (error) {
+      console.log(`${waivioWelcome} ${error.message}`);
+    }
+  }, null, false, null, null, false,
+);
 
 module.exports = {
   updatePostVotesJob,
   updatePostChildrenJob,
+  waivioWelcomeJob,
 };

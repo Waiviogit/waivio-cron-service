@@ -1,13 +1,13 @@
 const moment = require('moment');
 const _ = require('lodash');
-const { redisGetter, redisSetter } = require('../../redis');
+const { expireClient } = require('../../redis');
 const { postModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
 const { REDIS_KEY } = require('../../constants/redis');
 
 const run = async () => {
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
-  const { result: records } = await redisGetter.smembers({
+  const { result: records } = await expireClient.smembers({
     key: `${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}`,
   });
   if (_.isEmpty(records)) return;
@@ -32,7 +32,7 @@ const run = async () => {
     });
     if (res.modifiedCount) this.logger.log(`Children on @${post.root_author}/${post.permlink} updated!`);
   }
-  await redisSetter.del(`${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}`);
+  await expireClient.del(`${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}`);
 };
 
 module.exports = {

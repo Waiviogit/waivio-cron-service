@@ -1,10 +1,8 @@
-const moduleExports = {};
-
-moduleExports.redis = require('./redis');
-moduleExports.redisGetter = require('./redisGetter');
+const { db8Client } = require('./redis');
 
 module.exports = {
   redis: require('./redis'),
   redisGetter: require('./redisGetter'),
   redisSetter: require('./redisSetter'),
+  expireClient: require('./operations')(db8Client),
 };
