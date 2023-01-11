@@ -28,5 +28,13 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    aggregate: async ({ pipeline }) => {
+      try {
+        const result = await collection.aggregate(pipeline).toArray();
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
   };
 };
