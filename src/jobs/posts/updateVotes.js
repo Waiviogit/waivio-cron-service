@@ -39,6 +39,7 @@ const addWaivToPost = async (post, rewards) => {
 };
 
 const run = async () => {
+  console.log('update on votes started');
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
   const { result: posts } = await expireClient.smembers({
     key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`,
