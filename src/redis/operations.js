@@ -49,4 +49,12 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  hgetall: async ({ key }) => {
+    try {
+      const result = await client.hgetall(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
 });

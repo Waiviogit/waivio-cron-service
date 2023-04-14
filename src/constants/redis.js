@@ -3,4 +3,5 @@ exports.REDIS_KEY = {
   VOTE_UPDATES: 'votesUpdate',
   CHILDREN_UPDATE: 'commentsCounterUpdate',
   DISTRIBUTE_HIVE_ENGINE_REWARD: 'distributeHiveEngineReward',
+  SMT_POOL: 'smt_pool',
 };

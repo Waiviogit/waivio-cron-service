@@ -1,11 +1,41 @@
 const moment = require('moment');
 const _ = require('lodash');
-const { expireClient } = require('../../redis');
+const { expireClient, lastBlockClient } = require('../../redis');
 const { postModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
+const commentContract = require('../../utilities/hiveEngine/commentContract');
 const { REDIS_KEY } = require('../../constants/redis');
+const { TOKEN_WAIV } = require('../../constants/hiveEngine');
 
 const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
+
+const addWaivToPost = async (post, rewards) => {
+  const { author, permlink } = post;
+  const engineVotes = await commentContract.getVotes({
+    query: {
+      authorperm: `@${author}/${permlink}`,
+      symbol: 'WAIV',
+    },
+  });
+  if (!_.isEmpty(engineVotes)) {
+    for (const vote of post.active_votes) {
+      const waivVote = _.find(engineVotes, (v) => v.voter === vote.voter);
+      if (!waivVote) continue;
+      vote.rsharesWAIV = +waivVote.rshares;
+    }
+  }
+
+  const enginePost = await commentContract.getPost({
+    query: {
+      authorperm: `@${author}/${permlink}`,
+      symbol: 'WAIV',
+    },
+  });
+  if (!_.isEmpty(enginePost)) {
+    post.net_rshares_WAIV = +enginePost.voteRshareSum;
+    post.total_payout_WAIV = +enginePost.voteRshareSum * rewards;
+  }
+};
 
 const run = async () => {
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
@@ -13,6 +43,10 @@ const run = async () => {
     key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`,
   });
   if (_.isEmpty(posts)) return;
+
+  const { result: smtPool } = await lastBlockClient.hgetall({ key: `${REDIS_KEY.SMT_POOL}:${TOKEN_WAIV.SYMBOL}` });
+  const { rewardPool, pendingClaims } = smtPool;
+  const rewards = parseFloat(rewardPool) / parseFloat(pendingClaims);
 
   for (const post of posts) {
     const [author, permlink] = post.split('/');
@@ -47,6 +81,9 @@ const run = async () => {
         postForUpdate.active_votes.push(dbVote);
       }
     });
+
+    await addWaivToPost(postForUpdate, rewards);
+
     const { result: res } = await postModel.updateOne({
       filter: {
         root_author: postForUpdate.root_author,

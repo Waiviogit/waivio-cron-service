@@ -14,36 +14,30 @@ noroutine.init({
 });
 
 // region posts
-const updatePostVotesJob = new CronJob(
-  SCHEDULE.UPDATE_POST_VOTES, async () => {
-    try {
-      await updateVotes.run();
-    } catch (error) {
-      console.log(`${updateVotes} ${error.message}`);
-    }
-  }, null, false, null, null, false,
-);
+const updatePostVotesJob = new CronJob(SCHEDULE.UPDATE_POST_VOTES, async () => {
+  try {
+    await updateVotes.run();
+  } catch (error) {
+    console.log(`${updateVotes} ${error.message}`);
+  }
+}, null, false, null, null, false);
 
-const updatePostChildrenJob = new CronJob(
-  SCHEDULE.UPDATE_POST_CHILDREN, async () => {
-    try {
-      await updateChildren.run();
-    } catch (error) {
-      console.log(`${updateChildren} ${error.message}`);
-    }
-  }, null, false, null, null, false,
-);
+const updatePostChildrenJob = new CronJob(SCHEDULE.UPDATE_POST_CHILDREN, async () => {
+  try {
+    await updateChildren.run();
+  } catch (error) {
+    console.log(`${updateChildren} ${error.message}`);
+  }
+}, null, false, null, null, false);
 // endregion
 
-const waivioWelcomeJob = new CronJob(
-  SCHEDULE.WAIVIO_WELCOME, async () => {
-    try {
-      await waivioWelcome.run();
-    } catch (error) {
-      console.log(`${waivioWelcome} ${error.message}`);
-    }
-  }, null, false, null, null, false,
-);
+const waivioWelcomeJob = new CronJob(SCHEDULE.WAIVIO_WELCOME, async () => {
+  try {
+    await waivioWelcome.run();
+  } catch (error) {
+    console.log(`${waivioWelcome} ${error.message}`);
+  }
+}, null, false, null, null, false);
 
 module.exports = {
   updatePostVotesJob,
