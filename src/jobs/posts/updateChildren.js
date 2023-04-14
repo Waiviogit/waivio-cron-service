@@ -32,7 +32,7 @@ const run = async () => {
     });
     if (res.modifiedCount) console.log(`Children on @${post.root_author}/${post.permlink} updated!`);
   }
-  await expireClient.del(`${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}`);
+  await expireClient.del({ key: `${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}` });
 };
 
 module.exports = {

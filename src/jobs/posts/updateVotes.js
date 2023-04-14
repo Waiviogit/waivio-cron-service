@@ -96,7 +96,7 @@ const run = async () => {
     });
     if (res.modifiedCount) console.log(`Votes on @${author}/${permlink} updated!`);
   }
-  await expireClient.del(`${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`);
+  await expireClient.del({ key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}` });
 };
 
 module.exports = {
