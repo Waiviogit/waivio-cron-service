@@ -23,6 +23,7 @@ const addWaivToPost = async (post, rewards) => {
       if (!waivVote) continue;
       vote.rsharesWAIV = +waivVote.rshares;
     }
+    console.log(`Waiv on @${author}/${permlink} updated!`);
   }
 
   const enginePost = await commentContract.getPost({
@@ -93,7 +94,7 @@ const run = async () => {
         $set: postForUpdate,
       },
     });
-    if (res.modifiedCount) this.logger.log(`Votes on @${author}/${permlink} updated!`);
+    if (res.modifiedCount) console.log(`Votes on @${author}/${permlink} updated!`);
   }
   await expireClient.del(`${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`);
 };

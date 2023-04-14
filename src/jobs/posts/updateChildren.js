@@ -30,7 +30,7 @@ const run = async () => {
         $set: { children: post.children },
       },
     });
-    if (res.modifiedCount) this.logger.log(`Children on @${post.root_author}/${post.permlink} updated!`);
+    if (res.modifiedCount) console.log(`Children on @${post.root_author}/${post.permlink} updated!`);
   }
   await expireClient.del(`${REDIS_KEY.CHILDREN_UPDATE}:${hourAgo}`);
 };
