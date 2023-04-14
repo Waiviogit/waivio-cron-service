@@ -24,21 +24,24 @@ const run = async () => {
     if (!postForUpdate) continue;
 
     postForUpdate.author = postInDb.author;
-    postForUpdate.active_votes = _.reduce(postForUpdate.active_votes, (acc, item) => {
-      acc.push({
-        ..._
-          .chain(item)
-          .merge(_.pick(
-            _.find(postInDb.active_votes, { voter: item.voter }),
-            ['rsharesWAIV'],
-          ))
-          .pick(VOTE_FIELDS)
-          .value(),
-        weight: Math.round(item.rshares * 1e-6),
-      });
-      return acc;
-    },
-    []);
+    postForUpdate.active_votes = _.reduce(
+      postForUpdate.active_votes,
+      (acc, item) => {
+        acc.push({
+          ..._
+            .chain(item)
+            .merge(_.pick(
+              _.find(postInDb.active_votes, { voter: item.voter }),
+              ['rsharesWAIV'],
+            ))
+            .pick(VOTE_FIELDS)
+            .value(),
+          weight: Math.round(item.rshares * 1e-6),
+        });
+        return acc;
+      },
+      [],
+    );
     _.forEach(postInDb.active_votes, (dbVote) => {
       if (dbVote.voter.includes('_')) {
         postForUpdate.active_votes.push(dbVote);
