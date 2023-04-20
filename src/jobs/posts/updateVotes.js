@@ -6,8 +6,15 @@ const { hiveOperations } = require('../../utilities/hiveApi');
 const commentContract = require('../../utilities/hiveEngine/commentContract');
 const { REDIS_KEY } = require('../../constants/redis');
 const { TOKEN_WAIV } = require('../../constants/hiveEngine');
+const { parseJson } = require('../../helpers/jsonHelper');
 
 const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
+
+const postWithWaiv = (metadata) => {
+  const parsed = parseJson(metadata);
+  const metadataTags = parsed?.tags ?? [];
+  return TOKEN_WAIV.TAGS.some((el) => metadataTags.includes(el));
+};
 
 const addWaivToPost = async (post, rewards) => {
   const { author, permlink } = post;
@@ -84,9 +91,11 @@ const run = async () => {
       }
     });
 
-    await addWaivToPost(postForUpdate, rewards);
+    if (postWithWaiv(postForUpdate?.json_metadata)) {
+      await addWaivToPost(postForUpdate, rewards);
+    }
 
-    const { result: res } = await postModel.updateOne({
+    const { result: res, error: updateError } = await postModel.updateOne({
       filter: {
         root_author: postForUpdate.root_author,
         permlink: postForUpdate.permlink,
@@ -95,7 +104,8 @@ const run = async () => {
         $set: postForUpdate,
       },
     });
-    if (res.modifiedCount) console.log(`Votes on @${author}/${permlink} updated!`);
+    if (updateError) console.log(updateError.message);
+    if (res?.modifiedCount) console.log(`Votes on @${author}/${permlink} updated!`);
   }
   await expireClient.del({ key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}` });
 };

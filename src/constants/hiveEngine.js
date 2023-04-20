@@ -18,5 +18,5 @@ exports.TOKEN_WAIV = {
   EXPERTISE_FIELD: 'expertiseWAIV',
   WELCOME_REDIS: 'welcomeWAIV',
   CURATOR_VOTED: 'engineCuratorVoted',
-  TAGS: ['waivio', 'neoxian', 'palnet'],
+  TAGS: ['waivio', 'neoxian', 'palnet', 'waiv', 'food'],
 };
