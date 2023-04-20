@@ -59,7 +59,7 @@ const run = async () => {
 
   for (const post of posts) {
     const [author, permlink] = post.split('/');
-    const { result: postInDb } = await postModel.find({
+    const { result: postInDb } = await postModel.findOne({
       filter: { root_author: author, permlink },
     });
     if (!postInDb) continue;
