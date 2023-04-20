@@ -5,13 +5,13 @@ const updateChildren = require('./posts/updateChildren');
 const waivioWelcome = require('./bots/waivioWelcome');
 const { SCHEDULE } = require('../constants/cron');
 
-noroutine.init({
-  modules: [updateVotes, updateChildren],
-  pool: 3, // number of workers in thread pool
-  wait: 2000, // maximum delay to wait for a free thread
-  timeout: 1000 * 60 * 60 * 24, // maximum timeout for executing a functions
-  monitoring: 5000, // event loop utilization monitoring interval
-});
+// noroutine.init({
+//   modules: [updateVotes, updateChildren],
+//   pool: 3, // number of workers in thread pool
+//   wait: 2000, // maximum delay to wait for a free thread
+//   timeout: 1000 * 60 * 60 * 24, // maximum timeout for executing a functions
+//   monitoring: 5000, // event loop utilization monitoring interval
+// });
 
 // region posts
 const updatePostVotesJob = new CronJob(SCHEDULE.UPDATE_POST_VOTES, async () => {
