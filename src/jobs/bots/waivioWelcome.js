@@ -14,6 +14,7 @@ const sleep = util.promisify(setTimeout);
 
 const run = async () => {
   if (process.env.NODE_ENV !== 'production') return;
+  console.log('start WELCOME job');
   const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
   const postsKey = `${REDIS_KEY.DISTRIBUTE_HIVE_ENGINE_REWARD}:${TOKEN_WAIV.SYMBOL}:${threeDaysAgo}`;
   const welcomeKey = `${TOKEN_WAIV.WELCOME_REDIS}:${moment.utc().startOf('day').format()}`;
