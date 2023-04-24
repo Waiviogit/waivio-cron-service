@@ -18,12 +18,22 @@ const postWithWaiv = (metadata) => {
 
 const addWaivToPost = async (post, rewards) => {
   const { author, permlink } = post;
-  const engineVotes = await commentContract.getVotes({
-    query: {
-      authorperm: `@${author}/${permlink}`,
-      symbol: 'WAIV',
-    },
-  });
+
+  const [engineVotes, enginePost] = await Promise.all([
+    commentContract.getVotes({
+      query: {
+        authorperm: `@${author}/${permlink}`,
+        symbol: 'WAIV',
+      },
+    }),
+    commentContract.getPost({
+      query: {
+        authorperm: `@${author}/${permlink}`,
+        symbol: 'WAIV',
+      },
+    }),
+  ]);
+
   if (!_.isEmpty(engineVotes)) {
     for (const vote of post.active_votes) {
       const waivVote = _.find(engineVotes, (v) => v.voter === vote.voter);
@@ -32,13 +42,6 @@ const addWaivToPost = async (post, rewards) => {
     }
     console.log(`Waiv on @${author}/${permlink} updated!`);
   }
-
-  const enginePost = await commentContract.getPost({
-    query: {
-      authorperm: `@${author}/${permlink}`,
-      symbol: 'WAIV',
-    },
-  });
   if (!_.isEmpty(enginePost)) {
     post.net_rshares_WAIV = +enginePost.voteRshareSum;
     post.total_payout_WAIV = +enginePost.voteRshareSum * rewards;
