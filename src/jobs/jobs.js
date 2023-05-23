@@ -37,7 +37,7 @@ const waivioWelcomeJob = new CronJob(SCHEDULE.WAIVIO_WELCOME, async () => {
   } catch (error) {
     console.log(`${waivioWelcome} ${error.message}`);
   }
-}, null, false, null, null, false);
+}, null, false, null, null, true);
 
 module.exports = {
   updatePostVotesJob,

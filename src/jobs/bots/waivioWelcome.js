@@ -69,12 +69,21 @@ const run = async () => {
     .filter((el) => _.includes(_.map(users, 'name'), el.author))
     .filter((el) => !_
       .some(
-        _.map(voted, (vote) => ({ author: vote.split('/')[0], permlink: vote.split('/')[1] })),
+        _.map(voted, (vote) => {
+          if (typeof vote === 'string') {
+            return { author: vote.split('/')[0], permlink: vote.split('/')[1] };
+          }
+          return { author: '', permlink: '' };
+        }),
         (v) => v.author === el.author && v.permlink === el.permlink,
       ))
     .uniqBy('author')
     .value();
-  if (_.isEmpty(filteredPosts)) return;
+
+  if (_.isEmpty(filteredPosts)) {
+    console.log('filteredPosts empty');
+    return;
+  }
 
   let spentWeight = 0;
   const estimatedWeightOnPost = TOKEN_WAIV.WELCOME_DAILY_WEIGHT / filteredPosts.length;
@@ -83,7 +92,7 @@ const run = async () => {
     : Math.ceil(estimatedWeightOnPost);
 
   const sleepTime = Math.floor(TOKEN_WAIV.WELCOME_DAILY_VOTE_TIME / filteredPosts.length);
-
+  console.log('start WELCOME voting...');
   for (const post of filteredPosts) {
     const vote = {
       voter: process.env.WELCOME_BOT_NAME,
