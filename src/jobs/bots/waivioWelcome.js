@@ -1,7 +1,7 @@
 const moment = require('moment');
 const _ = require('lodash');
 const util = require('util');
-const { expireClient } = require('../../redis');
+const { redis8 } = require('../../redis');
 const { userModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
 const marketPools = require('../../utilities/hiveEngine/marketPools');
@@ -19,9 +19,9 @@ const run = async () => {
   const postsKey = `${REDIS_KEY.DISTRIBUTE_HIVE_ENGINE_REWARD}:${TOKEN_WAIV.SYMBOL}:${threeDaysAgo}`;
   const welcomeKey = `${TOKEN_WAIV.WELCOME_REDIS}:${moment.utc().startOf('day').format()}`;
 
-  const { result: records } = await expireClient.smembers({ key: postsKey });
+  const { result: records } = await redis8.smembers({ key: postsKey });
 
-  const { result: voted } = await expireClient.zrevrange({
+  const { result: voted } = await redis8.zrevrange({
     key: `${TOKEN_WAIV.CURATOR_VOTED}:${TOKEN_WAIV.SYMBOL}`,
     start: 0,
     stop: -1,
@@ -107,8 +107,8 @@ const run = async () => {
       continue;
     }
 
-    await expireClient.sadd({ key: welcomeKey, member: `${vote.author}/${vote.permlink}/${vote.weight}` });
-    await expireClient.expire({ key: welcomeKey, time: 345600 });
+    await redis8.sadd({ key: welcomeKey, member: `${vote.author}/${vote.permlink}/${vote.weight}` });
+    await redis8.expire({ key: welcomeKey, time: 345600 });
     console.log(`success vote on ${vote.author}/${vote.permlink} weight: ${vote.weight}`);
     await sleep(sleepTime);
     spentWeight += realWeight;

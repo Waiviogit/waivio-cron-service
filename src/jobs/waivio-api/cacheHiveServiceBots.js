@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const { appModel } = require('../../database/models');
 const { APP_HOST } = require('../../constants/common');
-const { expireClient } = require('../../redis');
+const { redis8 } = require('../../redis');
 const { REDIS_KEY } = require('../../constants/redis');
 
 const cacheHiveServiceBots = async () => {
@@ -10,7 +10,7 @@ const cacheHiveServiceBots = async () => {
   });
   if (error) return;
   if (!result) return;
-  await expireClient.sadd({
+  await redis8.sadd({
     key: REDIS_KEY.CACHE_SERVICE_BOTS,
     member: _.map(result.service_bots, (bot) => JSON.stringify(bot)),
   });

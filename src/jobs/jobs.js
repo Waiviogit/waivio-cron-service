@@ -6,6 +6,7 @@ const waivioWelcome = require('./bots/waivioWelcome');
 const cacheHivePrice = require('./waivio-api/cacheHivePrice');
 const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
 const collectAppExperts = require('./waivio-api/collectAppExperts');
+const collectWobjTopUsers = require('./waivio-api/collectWobjTopUsers');
 const { SCHEDULE } = require('../constants/cron');
 
 // noroutine.init({
@@ -67,6 +68,22 @@ const apiCollectAppExperts = new CronJob(SCHEDULE.WAIVIO_API_COLLECT_APP_EXPERTS
   }
 }, null, false, null, null, false);
 
+const apiCollectWobjectExperts = new CronJob(
+  SCHEDULE.WAIVIO_API_COLLECT_WOBJECT_EXPERTS,
+  async () => {
+    try {
+      await collectWobjTopUsers.run();
+    } catch (error) {
+      console.log(`apiCollectWobjectExperts ${error.message}`);
+    }
+  },
+  null,
+  false,
+  null,
+  null,
+  false,
+);
+
 // endregion
 
 module.exports = {
@@ -75,5 +92,6 @@ module.exports = {
   waivioWelcomeJob,
   apiCacheHivePrice,
   apiCacheServiceBots,
-  apiCollectAppExperts
+  apiCollectAppExperts,
+  apiCollectWobjectExperts,
 };
