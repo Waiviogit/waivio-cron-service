@@ -7,10 +7,12 @@ exports.likePost = async ({
   key, voter, author, permlink, weight,
 }) => {
   try {
-    const result = await broadcastClient.broadcast.vote({
-      voter, author, permlink, weight,
-    },
-    PrivateKey.fromString(key));
+    const result = await broadcastClient.broadcast.vote(
+      {
+        voter, author, permlink, weight,
+      },
+      PrivateKey.fromString(key),
+    );
     return { result: true };
   } catch (error) {
     return { error };
@@ -101,9 +103,9 @@ exports.getPostState = async ({ author, permlink, category }) => {
 exports.sendOperations = async ({ operations, key }) => {
   try {
     return {
-      result: await broadcastClient.broadcast.sendOperations(
-        [operations], PrivateKey.fromString(key),
-      ),
+      result: await broadcastClient
+        .broadcast
+        .sendOperations([operations], PrivateKey.fromString(key)),
     };
   } catch (error) {
     return { error };
@@ -120,8 +122,10 @@ exports.getVoteValue = async (vote) => {
     return { weight: 0, voteValue: 0 };
   }
 
-  const currentVote = _.find(post.active_votes,
-    (hiveVote) => vote.voter === hiveVote.voter);
+  const currentVote = _.find(
+    post.active_votes,
+    (hiveVote) => vote.voter === hiveVote.voter,
+  );
   if (!currentVote || currentVote.percent === 0) {
     return {
       weight: _.get(currentVote, 'percent', 0),
@@ -160,3 +164,23 @@ exports.claimRewards = async (account) => {
 };
 
 const parseToFloat = (balance) => parseFloat(balance.match(/.\d*.\d*/)[0]);
+
+exports.getRewardFund = async () => {
+  try {
+    return {
+      result: await databaseClient.call('condenser_api', 'get_reward_fund', ['post']),
+    };
+  } catch (error) {
+    return { error };
+  }
+};
+
+exports.getCurrentMedianHistoryPrice = async () => {
+  try {
+    return {
+      result: await databaseClient.call('condenser_api', 'get_current_median_history_price', []),
+    };
+  } catch (error) {
+    return { error };
+  }
+};

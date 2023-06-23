@@ -57,4 +57,12 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  hmset: async ({ key, data }) => {
+    try {
+      const result = await client.hmset(key, data);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
 });

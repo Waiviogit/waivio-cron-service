@@ -3,6 +3,8 @@ const noroutine = require('noroutine');
 const updateVotes = require('./posts/updateVotes');
 const updateChildren = require('./posts/updateChildren');
 const waivioWelcome = require('./bots/waivioWelcome');
+const cacheHivePrice = require('./waivio-api/cacheHivePrice');
+const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
 const { SCHEDULE } = require('../constants/cron');
 
 // noroutine.init({
@@ -35,12 +37,33 @@ const waivioWelcomeJob = new CronJob(SCHEDULE.WAIVIO_WELCOME, async () => {
   try {
     await waivioWelcome.run();
   } catch (error) {
-    console.log(`${waivioWelcome} ${error.message}`);
+    console.log(`waivioWelcome ${error.message}`);
   }
 }, null, false, null, null, true);
+
+// region api
+const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, async () => {
+  try {
+    await cacheHivePrice.run();
+  } catch (error) {
+    console.log(`cacheHivePrice ${error.message}`);
+  }
+}, null, false, null, null, false);
+
+const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, async () => {
+  try {
+    await cacheHiveServiceBots.run();
+  } catch (error) {
+    console.log(`apiCacheServiceBots ${error.message}`);
+  }
+}, null, false, null, null, false);
+
+// endregion
 
 module.exports = {
   updatePostVotesJob,
   updatePostChildrenJob,
   waivioWelcomeJob,
+  apiCacheHivePrice,
+  apiCacheServiceBots,
 };
