@@ -4,4 +4,5 @@ exports.SCHEDULE = {
   WAIVIO_WELCOME: '20 6 */1 * *',
   WAIVIO_API_CACHE_HIVE_PRICE: '0 */1 * * * *',
   WAIVIO_API_SERVICE_BOTS: '30 14 */1 * *',
+  WAIVIO_API_COLLECT_APP_EXPERTS: '30 14 */1 * *',
 };
