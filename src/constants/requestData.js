@@ -47,7 +47,31 @@ const TELEGRAM_API = {
   },
 };
 
+const NOTIFICATIONS_API = {
+  production: {
+    HOST: 'https://www.waivio.com',
+    BASE_URL: '/notifications-api',
+    SET_NOTIFICATION: '/set',
+  },
+  staging: {
+    HOST: 'https://waiviodev.com',
+    BASE_URL: '/notifications-api',
+    SET_NOTIFICATION: '/set',
+  },
+  development: {
+    HOST: 'http://localhost:4000',
+    BASE_URL: '/notifications-api',
+    SET_NOTIFICATION: '/set',
+  },
+  test: {
+    HOST: 'http://localhost:4000',
+    BASE_URL: '/notifications-api',
+    SET_NOTIFICATION: '/set',
+  },
+};
+
 module.exports = {
   OBJECT_BOT: OBJECT_BOT[process.env.NODE_ENV || 'development'],
   TELEGRAM_API: TELEGRAM_API[process.env.NODE_ENV || 'development'],
+  NOTIFICATIONS_API: NOTIFICATIONS_API[process.env.NODE_ENV || 'development'],
 };

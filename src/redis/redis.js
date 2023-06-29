@@ -11,6 +11,7 @@ redis.RedisClient.prototype.hgetall = util.promisify(redis.RedisClient.prototype
 redis.RedisClient.prototype.hmset = util.promisify(redis.RedisClient.prototype.hmset);
 redis.RedisClient.prototype.keys = util.promisify(redis.RedisClient.prototype.keys);
 redis.RedisClient.prototype.set = util.promisify(redis.RedisClient.prototype.set);
+redis.RedisClient.prototype.incr = util.promisify(redis.RedisClient.prototype.INCR);
 
 const db2Client = redis.createClient();
 const db8Client = redis.createClient();

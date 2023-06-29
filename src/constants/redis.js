@@ -12,4 +12,5 @@ exports.REDIS_KEY = {
   IMPORTED_USER_ERROR: 'import_user_error:',
   SITE_USERS_STATISTIC: 'siteUsers',
   WAIVIO_ADMINS: 'waivio_admins',
+  WEBSITE_SUSPENDED_COUNT: 'website_suspended_count',
 };

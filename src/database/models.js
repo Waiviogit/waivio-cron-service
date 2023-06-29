@@ -9,4 +9,5 @@ module.exports = {
   wobjectModel: collection({ collectionName: COLLECTION.WOBJECTS, dbName: DATABASE.WAIVIO }),
   subscriptionModel: collection({ collectionName: COLLECTION.SUBSCRIPTIONS, dbName: DATABASE.WAIVIO }),
   objectTypeModel: collection({ collectionName: COLLECTION.OBJECT_TYPES, dbName: DATABASE.WAIVIO }),
+  websitePaymentsModel: collection({ collectionName: COLLECTION.WEBSITE_PAYMENTS, dbName: DATABASE.WAIVIO }),
 };

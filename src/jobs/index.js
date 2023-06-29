@@ -14,6 +14,7 @@ const {
   apiUpdateTopObjects,
   apiUpdatePostsCount,
   apiUpdateWaivioAdmins,
+  apiWebsiteBalanceNotification,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -32,3 +33,4 @@ apiUpdateSiteObjects.start();
 apiUpdateTopObjects.start();
 apiUpdatePostsCount.start();
 apiUpdateWaivioAdmins.start();
+apiWebsiteBalanceNotification.start();

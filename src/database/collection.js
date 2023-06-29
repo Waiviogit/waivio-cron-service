@@ -68,6 +68,13 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    distinct: async ({ key, filter = {} }) => {
+      try {
+        return { result: await collection.distinct(key, filter) };
+      } catch (error) {
+        return { error };
+      }
+    },
     collection,
   };
 };

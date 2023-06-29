@@ -81,4 +81,12 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  incr: async ({ key }) => {
+    try {
+      const result = await client.incr(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
 });

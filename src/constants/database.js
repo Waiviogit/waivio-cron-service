@@ -10,4 +10,5 @@ exports.COLLECTION = {
   WOBJECTS: 'wobjects',
   SUBSCRIPTIONS: 'subscriptions',
   OBJECT_TYPES: 'objecttypes',
+  WEBSITE_PAYMENTS: 'website_payments',
 };
