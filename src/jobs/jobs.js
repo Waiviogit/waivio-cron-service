@@ -8,6 +8,7 @@ const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
 const collectAppExperts = require('./waivio-api/collectAppExperts');
 const collectWobjTopUsers = require('./waivio-api/collectWobjTopUsers');
 const importUsers = require('./waivio-api/importUsers');
+const setDailyWebsiteDebt = require('./waivio-api/setDailyWebsiteDebt');
 const { SCHEDULE } = require('../constants/cron');
 const { REDIS_KEY } = require('../constants/redis');
 
@@ -100,7 +101,15 @@ const apiErroredUsers = new CronJob(SCHEDULE.WAIVIO_API_IMPORT_ERROR_USERS, asyn
   } catch (error) {
     console.log(`apiErroredUsers ${error.message}`);
   }
-}, null, false, null, null, true);
+}, null, false, null, null, false);
+
+const apiSendWebsiteDebt = new CronJob(SCHEDULE.WAIVIO_API_SEND_WEBSITE_DAILY_DEBT, async () => {
+  try {
+    await setDailyWebsiteDebt.run();
+  } catch (error) {
+    console.log(`apiSendWebsiteDebt ${error.message}`);
+  }
+}, null, false, null, null, false);
 // endregion
 
 module.exports = {
@@ -113,4 +122,5 @@ module.exports = {
   apiCollectWobjectExperts,
   apiImportUsers,
   apiErroredUsers,
+  apiSendWebsiteDebt,
 };

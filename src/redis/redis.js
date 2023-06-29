@@ -12,16 +12,19 @@ redis.RedisClient.prototype.hmset = util.promisify(redis.RedisClient.prototype.h
 redis.RedisClient.prototype.keys = util.promisify(redis.RedisClient.prototype.keys);
 redis.RedisClient.prototype.set = util.promisify(redis.RedisClient.prototype.set);
 
-const db8Client = redis.createClient();
 const db2Client = redis.createClient();
+const db8Client = redis.createClient();
 const db10Client = redis.createClient();
+const db11Client = redis.createClient();
 
-db8Client.select(8);
 db2Client.select(2);
+db8Client.select(8);
 db10Client.select(10);
+db11Client.select(11);
 
 module.exports = {
   db8Client,
   db2Client,
   db10Client,
+  db11Client,
 };
