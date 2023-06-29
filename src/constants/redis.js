@@ -11,4 +11,5 @@ exports.REDIS_KEY = {
   IMPORTED_USER: 'import_user:',
   IMPORTED_USER_ERROR: 'import_user_error:',
   SITE_USERS_STATISTIC: 'siteUsers',
+  WAIVIO_ADMINS: 'waivio_admins',
 };

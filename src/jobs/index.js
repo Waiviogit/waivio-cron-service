@@ -13,6 +13,7 @@ const {
   apiUpdateSiteObjects,
   apiUpdateTopObjects,
   apiUpdatePostsCount,
+  apiUpdateWaivioAdmins,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -30,3 +31,4 @@ apiUpdateObjTypeExperts.start();
 apiUpdateSiteObjects.start();
 apiUpdateTopObjects.start();
 apiUpdatePostsCount.start();
+apiUpdateWaivioAdmins.start();

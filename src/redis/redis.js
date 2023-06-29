@@ -14,17 +14,20 @@ redis.RedisClient.prototype.set = util.promisify(redis.RedisClient.prototype.set
 
 const db2Client = redis.createClient();
 const db8Client = redis.createClient();
+const db9Client = redis.createClient();
 const db10Client = redis.createClient();
 const db11Client = redis.createClient();
 
 db2Client.select(2);
 db8Client.select(8);
+db9Client.select(9);
 db10Client.select(10);
 db11Client.select(11);
 
 module.exports = {
-  db8Client,
   db2Client,
+  db8Client,
+  db9Client,
   db10Client,
   db11Client,
 };
