@@ -8,4 +8,5 @@ exports.COLLECTION = {
   APPS: 'apps',
   USER_WOBJECTS: 'user_wobjects',
   WOBJECTS: 'wobjects',
+  SUBSCRIPTIONS: 'subscriptions',
 };

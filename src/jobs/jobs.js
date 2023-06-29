@@ -7,7 +7,9 @@ const cacheHivePrice = require('./waivio-api/cacheHivePrice');
 const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
 const collectAppExperts = require('./waivio-api/collectAppExperts');
 const collectWobjTopUsers = require('./waivio-api/collectWobjTopUsers');
+const importUsers = require('./waivio-api/importUsers');
 const { SCHEDULE } = require('../constants/cron');
+const { REDIS_KEY } = require('../constants/redis');
 
 // noroutine.init({
 //   modules: [updateVotes, updateChildren],
@@ -84,6 +86,21 @@ const apiCollectWobjectExperts = new CronJob(
   false,
 );
 
+const apiImportUsers = new CronJob(SCHEDULE.WAIVIO_API_IMPORT_USERS, async () => {
+  try {
+    await importUsers.run(REDIS_KEY.IMPORTED_USER);
+  } catch (error) {
+    console.log(`apiImportUsers ${error.message}`);
+  }
+}, null, false, null, null, false);
+
+const apiErroredUsers = new CronJob(SCHEDULE.WAIVIO_API_IMPORT_ERROR_USERS, async () => {
+  try {
+    await importUsers.run(REDIS_KEY.IMPORTED_USER_ERROR);
+  } catch (error) {
+    console.log(`apiErroredUsers ${error.message}`);
+  }
+}, null, false, null, null, true);
 // endregion
 
 module.exports = {
@@ -94,4 +111,6 @@ module.exports = {
   apiCacheServiceBots,
   apiCollectAppExperts,
   apiCollectWobjectExperts,
+  apiImportUsers,
+  apiErroredUsers,
 };

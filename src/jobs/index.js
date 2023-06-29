@@ -4,6 +4,10 @@ const {
   waivioWelcomeJob,
   apiCacheHivePrice,
   apiCacheServiceBots,
+  apiCollectAppExperts,
+  apiCollectWobjectExperts,
+  apiImportUsers,
+  apiErroredUsers,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -12,3 +16,7 @@ waivioWelcomeJob.start();
 
 apiCacheHivePrice.start();
 apiCacheServiceBots.start();
+apiCollectAppExperts.start();
+apiCollectWobjectExperts.start();
+apiImportUsers.start();
+apiErroredUsers.start();

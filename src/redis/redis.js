@@ -9,6 +9,8 @@ redis.RedisClient.prototype.expire = util.promisify(redis.RedisClient.prototype.
 redis.RedisClient.prototype.sadd = util.promisify(redis.RedisClient.prototype.sadd);
 redis.RedisClient.prototype.hgetall = util.promisify(redis.RedisClient.prototype.hgetall);
 redis.RedisClient.prototype.hmset = util.promisify(redis.RedisClient.prototype.hmset);
+redis.RedisClient.prototype.keys = util.promisify(redis.RedisClient.prototype.keys);
+redis.RedisClient.prototype.set = util.promisify(redis.RedisClient.prototype.set);
 
 const db8Client = redis.createClient();
 const db2Client = redis.createClient();

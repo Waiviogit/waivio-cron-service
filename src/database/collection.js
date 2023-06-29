@@ -36,5 +36,29 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    count: async ({ filter, options = {} }) => {
+      try {
+        const result = await collection.count(filter, options);
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
+    deleteMany: async ({ filter, options = {} }) => {
+      try {
+        const result = await collection.deleteMany(filter, options);
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
+    insertOne: async ({ doc }) => {
+      try {
+        const result = await collection.insertOne(doc);
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
   };
 };

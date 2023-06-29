@@ -8,4 +8,6 @@ exports.REDIS_KEY = {
   CURRENT_MEDIAN_HISTORY_PRICE: 'current_median_history_price',
   CACHE_SERVICE_BOTS: 'service_bots',
   TOP_WOBJ_USERS_KEY: 'topUsers',
+  IMPORTED_USER: 'import_user:',
+  IMPORTED_USER_ERROR: 'import_user_error:',
 };

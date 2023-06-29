@@ -7,4 +7,5 @@ module.exports = {
   appModel: collection({ collectionName: COLLECTION.APPS, dbName: DATABASE.WAIVIO }),
   userWobjectsModel: collection({ collectionName: COLLECTION.USER_WOBJECTS, dbName: DATABASE.WAIVIO }),
   wobjectModel: collection({ collectionName: COLLECTION.WOBJECTS, dbName: DATABASE.WAIVIO }),
+  subscriptionModel: collection({ collectionName: COLLECTION.SUBSCRIPTIONS, dbName: DATABASE.WAIVIO }),
 };

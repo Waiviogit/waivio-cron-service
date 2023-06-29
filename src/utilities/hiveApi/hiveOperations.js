@@ -184,3 +184,44 @@ exports.getCurrentMedianHistoryPrice = async () => {
     return { error };
   }
 };
+
+exports.getFollowCount = async (name) => {
+  try {
+    const result = await databaseClient.call(
+      'condenser_api',
+      'get_follow_count',
+      [name],
+    );
+    if (result && result.error) return { error: result.error };
+    return { result };
+  } catch (error) {
+    return { error };
+  }
+};
+
+exports.getFollowingsList = async ({ name, startAccount, limit }) => {
+  try {
+    const followings = await databaseClient.call(
+      'follow_api',
+      'get_following',
+      [name, startAccount, 'blog', limit],
+    );
+
+    return { followings };
+  } catch (error) {
+    return { error };
+  }
+};
+
+exports.getFollowersList = async ({ name, startAccount, limit }) => {
+  try {
+    const followers = await databaseClient.call(
+      'condenser_api',
+      'get_followers',
+      [name, startAccount, 'blog', limit],
+    );
+    return { followers };
+  } catch (error) {
+    return { error };
+  }
+};

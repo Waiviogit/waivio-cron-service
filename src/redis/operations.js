@@ -7,6 +7,22 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  set: async ({ key, data }) => {
+    try {
+      const result = await client.set(key, data);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  keys: async ({ key }) => {
+    try {
+      const result = await client.keys(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
   smembers: async ({ key }) => {
     try {
       const result = await client.smembers(key);
