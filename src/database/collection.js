@@ -28,6 +28,14 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    updateMany: async ({ filter, update, options = {} }) => {
+      try {
+        const result = await collection.updateMany(filter, update, options);
+        return { result };
+      } catch (error) {
+        return { error };
+      }
+    },
     aggregate: async ({ pipeline }) => {
       try {
         const result = await collection.aggregate(pipeline).toArray();
@@ -60,5 +68,6 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
+    collection,
   };
 };

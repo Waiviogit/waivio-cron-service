@@ -12,6 +12,7 @@ const {
   apiUpdateObjTypeExperts,
   apiUpdateSiteObjects,
   apiUpdateTopObjects,
+  apiUpdatePostsCount,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -28,3 +29,4 @@ apiSendWebsiteDebt.start();
 apiUpdateObjTypeExperts.start();
 apiUpdateSiteObjects.start();
 apiUpdateTopObjects.start();
+apiUpdatePostsCount.start();

@@ -11,6 +11,7 @@ const importUsers = require('./waivio-api/importUsers');
 const setDailyWebsiteDebt = require('./waivio-api/setDailyWebsiteDebt');
 const updateObjectTypeExperts = require('./waivio-api/updateObjectTypeExperts');
 const updateTopWobjJob = require('./waivio-api/updateTopWobjJob');
+const updatePostsCount = require('./waivio-api/updatePostsCount');
 const { SCHEDULE } = require('../constants/cron');
 const { REDIS_KEY } = require('../constants/redis');
 
@@ -136,6 +137,14 @@ const apiUpdateTopObjects = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_TOP_OBJECTS, 
     console.log(`apiUpdateTopObjects ${error.message}`);
   }
 }, null, false, null, null, false);
+
+const apiUpdatePostsCount = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_TOP_OBJECTS, async () => {
+  try {
+    await updatePostsCount.run();
+  } catch (error) {
+    console.log(`apiUpdatePostsCount ${error.message}`);
+  }
+}, null, false, null, null, false);
 // endregion
 
 module.exports = {
@@ -152,4 +161,5 @@ module.exports = {
   apiUpdateObjTypeExperts,
   apiUpdateSiteObjects,
   apiUpdateTopObjects,
+  apiUpdatePostsCount,
 };
