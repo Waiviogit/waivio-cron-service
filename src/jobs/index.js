@@ -11,6 +11,7 @@ const {
   apiSendWebsiteDebt,
   apiUpdateObjTypeExperts,
   apiUpdateSiteObjects,
+  apiUpdateTopObjects,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -26,3 +27,4 @@ apiErroredUsers.start();
 apiSendWebsiteDebt.start();
 apiUpdateObjTypeExperts.start();
 apiUpdateSiteObjects.start();
+apiUpdateTopObjects.start();
