@@ -9,6 +9,7 @@ const {
   apiImportUsers,
   apiErroredUsers,
   apiSendWebsiteDebt,
+  apiUpdateObjTypeExperts,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -22,3 +23,4 @@ apiCollectWobjectExperts.start();
 apiImportUsers.start();
 apiErroredUsers.start();
 apiSendWebsiteDebt.start();
+apiUpdateObjTypeExperts.start();

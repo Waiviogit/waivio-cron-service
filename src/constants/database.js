@@ -9,4 +9,5 @@ exports.COLLECTION = {
   USER_WOBJECTS: 'user_wobjects',
   WOBJECTS: 'wobjects',
   SUBSCRIPTIONS: 'subscriptions',
+  OBJECT_TYPES: 'objecttypes',
 };
