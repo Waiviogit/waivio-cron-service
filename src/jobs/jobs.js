@@ -119,6 +119,14 @@ const apiUpdateObjTypeExperts = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_OBJ_TYPE_
     console.log(`apiUpdateObjTypeExperts ${error.message}`);
   }
 }, null, false, null, null, false);
+
+const apiUpdateSiteObjects = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_SITE_OBJECTS, async () => {
+  try {
+    await updateObjectTypeExperts.run();
+  } catch (error) {
+    console.log(`apiUpdateSiteObjects ${error.message}`);
+  }
+}, null, false, null, null, false);
 // endregion
 
 module.exports = {
@@ -133,4 +141,5 @@ module.exports = {
   apiErroredUsers,
   apiSendWebsiteDebt,
   apiUpdateObjTypeExperts,
+  apiUpdateSiteObjects,
 };
