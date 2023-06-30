@@ -156,13 +156,21 @@ const apiUpdateWaivioAdmins = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_WAIVIO_ADMI
   }
 }, null, false, null, null, false);
 
-const apiWebsiteBalanceNotification = new CronJob(SCHEDULE.WAIVIO_API_WEBSITE_BALANCE_NOTIFICATION, async () => {
-  try {
-    await websiteBalanceNotification.run();
-  } catch (error) {
-    console.log(`apiwebsiteBalanceNotification ${error.message}`);
-  }
-}, null, false, null, null, false);
+const apiWebsiteBalanceNotification = new CronJob(
+  SCHEDULE.WAIVIO_API_WEBSITE_BALANCE_NOTIFICATION,
+  async () => {
+    try {
+      await websiteBalanceNotification.run();
+    } catch (error) {
+      console.log(`apiWebsiteBalanceNotification ${error.message}`);
+    }
+  },
+  null,
+  false,
+  null,
+  null,
+  false,
+);
 // endregion
 
 module.exports = {
