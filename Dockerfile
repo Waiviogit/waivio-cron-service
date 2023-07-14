@@ -1,4 +1,4 @@
-FROM node:14.17.6-alpine3.12
+FROM node:18.12.0-slim
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -7,6 +7,5 @@ COPY ./package.json ./
 
 RUN npm install
 COPY . .
-RUN npm run build
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
