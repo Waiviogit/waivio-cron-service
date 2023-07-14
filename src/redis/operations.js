@@ -7,6 +7,22 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  set: async ({ key, data }) => {
+    try {
+      const result = await client.set(key, data);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  keys: async ({ key }) => {
+    try {
+      const result = await client.keys(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
   smembers: async ({ key }) => {
     try {
       const result = await client.smembers(key);
@@ -52,6 +68,22 @@ module.exports = (client) => ({
   hgetall: async ({ key }) => {
     try {
       const result = await client.hgetall(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  hmset: async ({ key, data }) => {
+    try {
+      const result = await client.hmset(key, data);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  incr: async ({ key }) => {
+    try {
+      const result = await client.incr(key);
       return { result };
     } catch (error) {
       return { error };

@@ -1,6 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
-const { expireClient, lastBlockClient } = require('../../redis');
+const { redis8, redis2 } = require('../../redis');
 const { postModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
 const commentContract = require('../../utilities/hiveEngine/commentContract');
@@ -51,12 +51,12 @@ const addWaivToPost = async (post, rewards) => {
 const run = async () => {
   console.log('update on votes started');
   const hourAgo = moment.utc().subtract(1, 'hour').startOf('hour').format();
-  const { result: posts } = await expireClient.smembers({
+  const { result: posts } = await redis8.smembers({
     key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}`,
   });
   if (_.isEmpty(posts)) return;
 
-  const { result: smtPool } = await lastBlockClient.hgetall({ key: `${REDIS_KEY.SMT_POOL}:${TOKEN_WAIV.SYMBOL}` });
+  const { result: smtPool } = await redis2.hgetall({ key: `${REDIS_KEY.SMT_POOL}:${TOKEN_WAIV.SYMBOL}` });
   const { rewardPool, pendingClaims } = smtPool;
   const rewards = parseFloat(rewardPool) / parseFloat(pendingClaims);
 
@@ -110,7 +110,7 @@ const run = async () => {
     if (updateError) console.log(updateError.message);
     if (res?.modifiedCount) console.log(`Votes on @${author}/${permlink} updated!`);
   }
-  await expireClient.del({ key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}` });
+  await redis8.del({ key: `${REDIS_KEY.VOTE_UPDATES}:${hourAgo}` });
 };
 
 module.exports = {
