@@ -68,6 +68,7 @@ const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, as
   }
 }, null, false, null, null, false);
 
+// for now we don't use it
 const apiCollectAppExperts = new CronJob(SCHEDULE.WAIVIO_API_COLLECT_APP_EXPERTS, async () => {
   try {
     await collectAppExperts.run();
