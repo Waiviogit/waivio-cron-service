@@ -23,7 +23,8 @@ waivioWelcomeJob.start();
 
 apiCacheHivePrice.start();
 apiCacheServiceBots.start();
-apiCollectAppExperts.start();
+// for now we don't use it
+// apiCollectAppExperts.start();
 apiCollectWobjectExperts.start();
 apiImportUsers.start();
 apiErroredUsers.start();
