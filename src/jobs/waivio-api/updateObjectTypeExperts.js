@@ -3,10 +3,13 @@ const _ = require('lodash');
 const { objectTypeModel, wobjectModel, userWobjectsModel } = require('../../database/models');
 
 const OBJECT_TYPE_TOP_EXPERTS_COUNT = 30;
+const OBJECT_LIMIT = 100;
 const getObjectTypeWobjects = async (name) => {
   const { result: wobjects, error } = await wobjectModel.find({
     filter: { object_type: name },
     options: {
+      sort: { weight: -1 },
+      limit: OBJECT_LIMIT,
       projection: { _id: 0, author_permlink: 1 },
     },
   });

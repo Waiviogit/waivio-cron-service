@@ -14,6 +14,7 @@ const updateTopWobjJob = require('./waivio-api/updateTopWobjJob');
 const updatePostsCount = require('./waivio-api/updatePostsCount');
 const updateWaivioAdmins = require('./waivio-api/updateWaivioAdmins');
 const websiteBalanceNotification = require('./waivio-api/websiteBalanceNotification');
+const updateSiteWobjects = require('./waivio-api/updateSiteWobjects');
 const { SCHEDULE } = require('../constants/cron');
 const { REDIS_KEY } = require('../constants/redis');
 
@@ -60,7 +61,7 @@ const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, asyn
   }
 }, null, false, null, null, false);
 
-const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, async () => {
+const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_SERVICE_BOTS, async () => {
   try {
     await cacheHiveServiceBots.run();
   } catch (error) {
@@ -127,7 +128,7 @@ const apiUpdateObjTypeExperts = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_OBJ_TYPE_
 
 const apiUpdateSiteObjects = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_SITE_OBJECTS, async () => {
   try {
-    await updateObjectTypeExperts.run();
+    await updateSiteWobjects.run();
   } catch (error) {
     console.log(`apiUpdateSiteObjects ${error.message}`);
   }
@@ -141,7 +142,7 @@ const apiUpdateTopObjects = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_TOP_OBJECTS, 
   }
 }, null, false, null, null, false);
 
-const apiUpdatePostsCount = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_TOP_OBJECTS, async () => {
+const apiUpdatePostsCount = new CronJob(SCHEDULE.WAIVIO_API_UPDATE_POSTS_COUNT, async () => {
   try {
     await updatePostsCount.run();
   } catch (error) {
