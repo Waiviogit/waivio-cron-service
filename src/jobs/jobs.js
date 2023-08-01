@@ -61,7 +61,7 @@ const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, asyn
   }
 }, null, false, null, null, false);
 
-const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, async () => {
+const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_SERVICE_BOTS, async () => {
   try {
     await cacheHiveServiceBots.run();
   } catch (error) {
