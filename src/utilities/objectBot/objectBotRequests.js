@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const axios = require('axios');
+const { sendError } = require('../../helpers/sentryHelper');
 
 exports.sendCustomJson = async (data, url, sendSentry = true) => {
   try {
@@ -13,8 +14,7 @@ exports.sendCustomJson = async (data, url, sendSentry = true) => {
     return { result: _.get(result, 'data.result') };
   } catch (error) {
     if (sendSentry) {
-      Sentry.captureException(error);
-      await sendSentryNotification(error);
+      await sendError(error);
     }
     return { error };
   }
