@@ -15,6 +15,7 @@ const updatePostsCount = require('./waivio-api/updatePostsCount');
 const updateWaivioAdmins = require('./waivio-api/updateWaivioAdmins');
 const websiteBalanceNotification = require('./waivio-api/websiteBalanceNotification');
 const updateSiteWobjects = require('./waivio-api/updateSiteWobjects');
+const checkHiveNode = require('./nodes/checkHiveNode');
 const { SCHEDULE } = require('../constants/cron');
 const { REDIS_KEY } = require('../constants/redis');
 
@@ -175,6 +176,17 @@ const apiWebsiteBalanceNotification = new CronJob(
 );
 // endregion
 
+// region nodes
+const hiveNodeJob = new CronJob(SCHEDULE.HIVE_NODE_CHECK, async () => {
+  try {
+    await checkHiveNode.run();
+  } catch (error) {
+    console.log(`checkHiveNode ${error.message}`);
+  }
+}, null, false, null, null, true);
+
+// endregion
+
 module.exports = {
   updatePostVotesJob,
   updatePostChildrenJob,
@@ -192,4 +204,5 @@ module.exports = {
   apiUpdatePostsCount,
   apiUpdateWaivioAdmins,
   apiWebsiteBalanceNotification,
+  hiveNodeJob,
 };
