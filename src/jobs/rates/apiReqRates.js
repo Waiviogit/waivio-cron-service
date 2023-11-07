@@ -21,6 +21,7 @@ const run = async () => {
   if (avg > MAX_RPM) {
     await sendTelegramWarning({ message: `RPM on api: ${avg}` });
   }
+  console.log(`AVG RPM API: ${avg}`);
 };
 
 module.exports = {
