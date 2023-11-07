@@ -7,7 +7,9 @@ const MAX_RPM = 2000;
 
 const run = async () => {
   const rates = [];
-  const currentMinute = new Date().getMinutes();
+  let currentMinute = new Date().getMinutes();
+  if (!currentMinute) currentMinute = 60;
+
   const keys = [];
   for (let i = 0; i < 5; i++) {
     keys.push(`${REDIS_KEY.REQUESTS_RATE_API}${currentMinute - (i + 1)}`);
