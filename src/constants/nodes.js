@@ -1,9 +1,3 @@
-exports.REDIS_KEY = {
-  BLOCK: 'test:hive:blocks',
-  POST: 'test:hive:post',
-  HISTORY: 'test:hive:history',
-};
-
 exports.NODES_FOR_TEST = {
   REGULAR: [
     'https://api.hive.blog',

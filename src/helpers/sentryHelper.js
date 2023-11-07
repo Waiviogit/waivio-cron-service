@@ -17,6 +17,25 @@ const sendSentryNotification = async () => {
   }
 };
 
+const sendTelegramWarning = async ({ message }) => {
+  try {
+    if (!['production'].includes(process.env.NODE_ENV)) return;
+    const result = await axios.post(
+      `${TELEGRAM_API.HOST}${TELEGRAM_API.BASE_URL}${TELEGRAM_API.WARNING_MESSAGE}`,
+      {
+        cron_service_key: process.env.CRON_SERVICE_KEY,
+        message,
+      },
+      {
+        timeout: 15000,
+      },
+    );
+    return { result: result.data };
+  } catch (error) {
+    return { error };
+  }
+};
+
 const sendError = async (error) => {
   Sentry.captureException(error);
   await sendSentryNotification();
@@ -24,4 +43,5 @@ const sendError = async (error) => {
 
 module.exports = {
   sendError,
+  sendTelegramWarning,
 };

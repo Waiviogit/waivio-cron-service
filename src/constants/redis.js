@@ -13,4 +13,8 @@ exports.REDIS_KEY = {
   SITE_USERS_STATISTIC: 'siteUsers',
   WAIVIO_ADMINS: 'waivio_admins',
   WEBSITE_SUSPENDED_COUNT: 'website_suspended_count',
+  BLOCK: 'test:hive:blocks',
+  POST: 'test:hive:post',
+  HISTORY: 'test:hive:history',
+  REQUESTS_RATE_API: 'requests:api:',
 };
