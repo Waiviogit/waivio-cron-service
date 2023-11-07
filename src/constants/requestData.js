@@ -31,19 +31,22 @@ const OBJECT_BOT = {
 
 const TELEGRAM_API = {
   production: {
-    HOST: 'https://waiviodev.com',
+    HOST: 'https://www.waivio.com',
     BASE_URL: '/telegram-api',
     SENTRY_ERROR: '/sentry',
+    WARNING_MESSAGE: '/cron-message',
   },
   staging: {
     HOST: 'https://waiviodev.com',
     BASE_URL: '/telegram-api',
     SENTRY_ERROR: '/sentry',
+    WARNING_MESSAGE: '/cron-message',
   },
   development: {
     HOST: 'http://localhost:8000',
     BASE_URL: '/telegram-api',
     SENTRY_ERROR: '/sentry',
+    WARNING_MESSAGE: '/cron-message',
   },
 };
 

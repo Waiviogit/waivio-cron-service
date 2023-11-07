@@ -18,4 +18,5 @@ exports.SCHEDULE = {
   HIVE_NODE_CHECK: process.env.NODE_ENV === 'production'
     ? '45 */1 * * *'
     : '15 */1 * * *',
+  RPM_CHECK: '*/5 * * * *',
 };

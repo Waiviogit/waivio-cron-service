@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const Hived = require('@hiveio/dhive');
 const {
-  NODES_FOR_TEST, BLOCK_TEST_DATA, REGULAR_TEST_DATA, REDIS_KEY, HISTORY_TEST_DATA,
+  NODES_FOR_TEST, BLOCK_TEST_DATA, REGULAR_TEST_DATA, HISTORY_TEST_DATA,
 } = require('../../constants/nodes');
 const { redis2 } = require('../../redis');
+const { REDIS_KEY } = require('../../constants/redis');
 
 const getCache = (nodes) => _.reduce(nodes, (acc, el) => {
   acc[el.url] = JSON.stringify(_.omit(el, ['url']));
