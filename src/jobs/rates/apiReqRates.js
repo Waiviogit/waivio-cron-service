@@ -3,7 +3,7 @@ const { redis2 } = require('../../redis');
 const { REDIS_KEY } = require('../../constants/redis');
 const { sendTelegramWarning } = require('../../helpers/sentryHelper');
 
-const MAX_RPM = 2500;
+const MAX_RPM = 2000;
 
 const run = async () => {
   const rates = [];

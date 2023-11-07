@@ -32,6 +32,8 @@ const sendTelegramWarning = async ({ message }) => {
     );
     return { result: result.data };
   } catch (error) {
+    console.log('sendTelegramWarning Error:');
+    console.log(error.message);
     return { error };
   }
 };
