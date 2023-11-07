@@ -52,7 +52,7 @@ const waivioWelcomeJob = new CronJob(SCHEDULE.WAIVIO_WELCOME, async () => {
   } catch (error) {
     console.log(`waivioWelcome ${error.message}`);
   }
-}, null, false, null, null, true);
+}, null, false, null, null, false);
 
 // region api
 const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, async () => {
