@@ -15,5 +15,7 @@ exports.SCHEDULE = {
   WAIVIO_API_UPDATE_POSTS_COUNT: '0 * * * *',
   WAIVIO_API_UPDATE_WAIVIO_ADMINS: '0 */2 * * *',
   WAIVIO_API_WEBSITE_BALANCE_NOTIFICATION: '7 0 */1 * *',
-  HIVE_NODE_CHECK: '45 */1 * * *',
+  HIVE_NODE_CHECK: process.env.NODE_ENV === 'production'
+    ? '45 */1 * * *'
+    : '15 */1 * * *',
 };
