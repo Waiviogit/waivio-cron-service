@@ -3,7 +3,7 @@ const { redis2 } = require('../../redis');
 const { REDIS_KEY } = require('../../constants/redis');
 const { sendTelegramWarning } = require('../../helpers/sentryHelper');
 
-const MAX_RPM = 2000;
+const MAX_RPM = 3000;
 
 const run = async () => {
   const rates = [];
@@ -20,7 +20,11 @@ const run = async () => {
   }));
 
   const avg = _.mean(rates);
-  if (avg > MAX_RPM) {
+
+  const { result: maxRedis } = await redis2.get({ key: REDIS_KEY.REQUESTS_RATE_WARNING_LIMIT });
+
+  const max = maxRedis ? Number(maxRedis) : MAX_RPM;
+  if (avg > max) {
     await sendTelegramWarning({ message: `RPM on api: ${avg}` });
   }
   console.log(`AVG RPM API: ${avg}`);

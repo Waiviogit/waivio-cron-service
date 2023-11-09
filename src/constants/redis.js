@@ -17,4 +17,5 @@ exports.REDIS_KEY = {
   POST: 'test:hive:post',
   HISTORY: 'test:hive:history',
   REQUESTS_RATE_API: 'requests:api:',
+  REQUESTS_RATE_WARNING_LIMIT: 'requests:warning_limit',
 };
