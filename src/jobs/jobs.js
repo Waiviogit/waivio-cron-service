@@ -4,7 +4,7 @@ const updateVotes = require('./posts/updateVotes');
 const updateChildren = require('./posts/updateChildren');
 const waivioWelcome = require('./bots/waivioWelcome');
 const cacheHivePrice = require('./waivio-api/cacheHivePrice');
-const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
+// const cacheHiveServiceBots = require('./waivio-api/cacheHiveServiceBots');
 const collectAppExperts = require('./waivio-api/collectAppExperts');
 const collectWobjTopUsers = require('./waivio-api/collectWobjTopUsers');
 const importUsers = require('./waivio-api/importUsers');
@@ -63,13 +63,13 @@ const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, asyn
   }
 }, null, false, null, null, false);
 
-const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_SERVICE_BOTS, async () => {
-  try {
-    await cacheHiveServiceBots.run();
-  } catch (error) {
-    console.log(`apiCacheServiceBots ${error.message}`);
-  }
-}, null, false, null, null, false);
+// const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_SERVICE_BOTS, async () => {
+//   try {
+//     await cacheHiveServiceBots.run();
+//   } catch (error) {
+//     console.log(`apiCacheServiceBots ${error.message}`);
+//   }
+// }, null, false, null, null, false);
 
 // for now we don't use it
 const apiCollectAppExperts = new CronJob(SCHEDULE.WAIVIO_API_COLLECT_APP_EXPERTS, async () => {
@@ -203,7 +203,7 @@ module.exports = {
   updatePostChildrenJob,
   waivioWelcomeJob,
   apiCacheHivePrice,
-  apiCacheServiceBots,
+  // apiCacheServiceBots,
   apiCollectAppExperts,
   apiCollectWobjectExperts,
   apiImportUsers,
