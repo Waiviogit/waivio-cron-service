@@ -3,7 +3,7 @@ const {
   updatePostChildrenJob,
   waivioWelcomeJob,
   apiCacheHivePrice,
-  apiCacheServiceBots,
+  // apiCacheServiceBots,
   apiCollectAppExperts,
   apiCollectWobjectExperts,
   apiImportUsers,
@@ -24,7 +24,7 @@ updatePostChildrenJob.start();
 waivioWelcomeJob.start();
 
 apiCacheHivePrice.start();
-apiCacheServiceBots.start();
+// apiCacheServiceBots.start();
 // for now we don't use it
 // apiCollectAppExperts.start();
 apiCollectWobjectExperts.start();
