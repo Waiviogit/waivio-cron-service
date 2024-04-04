@@ -16,6 +16,7 @@ const updateWaivioAdmins = require('./waivio-api/updateWaivioAdmins');
 const websiteBalanceNotification = require('./waivio-api/websiteBalanceNotification');
 const updateSiteWobjects = require('./waivio-api/updateSiteWobjects');
 const checkHiveNode = require('./nodes/checkHiveNode');
+const checkHiveEngineNodes = require('./nodes/checkHiveEngineNodes');
 const apiReqRates = require('./rates/apiReqRates');
 const { SCHEDULE } = require('../constants/cron');
 const { REDIS_KEY } = require('../constants/redis');
@@ -186,6 +187,14 @@ const hiveNodeJob = new CronJob(SCHEDULE.HIVE_NODE_CHECK, async () => {
   }
 }, null, false, null, null, false);
 
+const hiveEngineNodeJob = new CronJob(SCHEDULE.HIVE_ENGINE_CHECK, async () => {
+  try {
+    await checkHiveEngineNodes.run();
+  } catch (error) {
+    console.log(`hiveEngineNodeJob ${error.message}`);
+  }
+}, null, false, null, null, false);
+
 // endregion
 
 // region rates
@@ -217,4 +226,5 @@ module.exports = {
   apiWebsiteBalanceNotification,
   hiveNodeJob,
   ratesJob,
+  hiveEngineNodeJob,
 };

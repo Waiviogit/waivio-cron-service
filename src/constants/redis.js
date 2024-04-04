@@ -18,4 +18,5 @@ exports.REDIS_KEY = {
   HISTORY: 'test:hive:history',
   REQUESTS_RATE_API: 'requests:api:',
   REQUESTS_RATE_WARNING_LIMIT: 'requests:warning_limit',
+  ENGINE_NODES_LIST: 'engine_nodes_list',
 };
