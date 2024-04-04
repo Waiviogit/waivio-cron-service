@@ -17,6 +17,7 @@ const {
   apiWebsiteBalanceNotification,
   hiveNodeJob,
   ratesJob,
+  hiveEngineNodeJob,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -39,3 +40,4 @@ apiUpdateWaivioAdmins.start();
 apiWebsiteBalanceNotification.start();
 hiveNodeJob.start();
 ratesJob.start();
+hiveEngineNodeJob.start();
