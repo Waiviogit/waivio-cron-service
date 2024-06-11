@@ -20,4 +20,5 @@ exports.SCHEDULE = {
     : '15 */1 * * *',
   RPM_CHECK: '*/5 * * * *',
   HIVE_ENGINE_CHECK: '*/1 * * * *',
+  SET_ACTIVE_SITES: '*/5 * * * *',
 };

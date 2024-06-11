@@ -18,6 +18,7 @@ const {
   hiveNodeJob,
   ratesJob,
   hiveEngineNodeJob,
+  apiSetActiveSites,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -25,6 +26,7 @@ updatePostChildrenJob.start();
 waivioWelcomeJob.start();
 
 apiCacheHivePrice.start();
+apiSetActiveSites.start();
 // apiCacheServiceBots.start();
 // for now we don't use it
 // apiCollectAppExperts.start();

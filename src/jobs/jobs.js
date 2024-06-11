@@ -15,6 +15,7 @@ const updatePostsCount = require('./waivio-api/updatePostsCount');
 const updateWaivioAdmins = require('./waivio-api/updateWaivioAdmins');
 const websiteBalanceNotification = require('./waivio-api/websiteBalanceNotification');
 const updateSiteWobjects = require('./waivio-api/updateSiteWobjects');
+const setActiveSites = require('./waivio-api/setActiveSites');
 const checkHiveNode = require('./nodes/checkHiveNode');
 const checkHiveEngineNodes = require('./nodes/checkHiveEngineNodes');
 const apiReqRates = require('./rates/apiReqRates');
@@ -63,6 +64,14 @@ const apiCacheHivePrice = new CronJob(SCHEDULE.WAIVIO_API_CACHE_HIVE_PRICE, asyn
     console.log(`cacheHivePrice ${error.message}`);
   }
 }, null, false, null, null, false);
+
+const apiSetActiveSites = new CronJob(SCHEDULE.SET_ACTIVE_SITES, async () => {
+  try {
+    await setActiveSites.run();
+  } catch (error) {
+    console.log(`apiSetActiveSites ${error.message}`);
+  }
+}, null, false, null, null, true);
 
 // const apiCacheServiceBots = new CronJob(SCHEDULE.WAIVIO_API_SERVICE_BOTS, async () => {
 //   try {
@@ -227,4 +236,5 @@ module.exports = {
   hiveNodeJob,
   ratesJob,
   hiveEngineNodeJob,
+  apiSetActiveSites,
 };
