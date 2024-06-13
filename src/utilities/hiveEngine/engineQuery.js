@@ -30,7 +30,7 @@ exports.engineQuery = async ({
 };
 
 exports.engineProxy = async ({
-  hostUrl,
+  hostUrl = _.sample(HIVE_ENGINE_NODES),
   method,
   params,
   endpoint,
