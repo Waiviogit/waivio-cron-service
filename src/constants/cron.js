@@ -1,7 +1,7 @@
 exports.SCHEDULE = {
   UPDATE_POST_VOTES: '05 */1 * * *',
   UPDATE_POST_CHILDREN: '20 */1 * * *',
-  WAIVIO_WELCOME: '20 13 */1 * *',
+  WAIVIO_WELCOME: '20 07 */1 * *',
   WAIVIO_API_CACHE_HIVE_PRICE: '0 */1 * * * *',
   WAIVIO_API_SERVICE_BOTS: '30 14 */1 * *',
   WAIVIO_API_COLLECT_APP_EXPERTS: '30 14 */1 * *',
@@ -20,4 +20,5 @@ exports.SCHEDULE = {
     : '15 */1 * * *',
   RPM_CHECK: '*/5 * * * *',
   HIVE_ENGINE_CHECK: '*/1 * * * *',
+  SET_ACTIVE_SITES: '*/5 * * * *',
 };
