@@ -1,6 +1,6 @@
 const moment = require('moment');
 const _ = require('lodash');
-const util = require('util');
+const { setTimeout } = require('node:timers/promises');
 const { redis8 } = require('../../redis');
 const { userModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
@@ -9,8 +9,6 @@ const commentContract = require('../../utilities/hiveEngine/commentContract');
 const { REDIS_KEY } = require('../../constants/redis');
 const { getGeckoPrice } = require('../../helpers/congeckoHelper');
 const { TOKEN_WAIV } = require('../../constants/hiveEngine');
-
-const sleep = util.promisify(setTimeout);
 
 const run = async () => {
   if (process.env.NODE_ENV !== 'production') return;
@@ -110,7 +108,9 @@ const run = async () => {
     await redis8.sadd({ key: welcomeKey, member: `${vote.author}/${vote.permlink}/${vote.weight}` });
     await redis8.expire({ key: welcomeKey, time: 345600 });
     console.log(`success vote on ${vote.author}/${vote.permlink} weight: ${vote.weight}`);
-    await sleep(sleepTime);
+
+    await setTimeout(sleepTime);
+
     spentWeight += realWeight;
     if (spentWeight >= TOKEN_WAIV.WELCOME_DAILY_WEIGHT) return;
   }
