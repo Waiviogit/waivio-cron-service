@@ -7,9 +7,9 @@ module.exports = (client) => ({
       return { error };
     }
   },
-  set: async ({ key, data }) => {
+  set: async ({ key, data, mode }) => {
     try {
-      const result = await client.set(key, data);
+      const result = await client.set(key, data, mode);
       return { result };
     } catch (error) {
       return { error };
@@ -84,6 +84,30 @@ module.exports = (client) => ({
   incr: async ({ key }) => {
     try {
       const result = await client.incr(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  rpush: async ({ key, elements }) => {
+    try {
+      const result = await client.rpush(key, elements);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  llen: async ({ key }) => {
+    try {
+      const result = await client.llen(key);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  lpop: async ({ key }) => {
+    try {
+      const result = await client.lpop(key);
       return { result };
     } catch (error) {
       return { error };
