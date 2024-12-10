@@ -43,6 +43,7 @@ const releaseLock = async () => {
 };
 
 const processFilteredPosts = async () => {
+  if (process.env.NODE_ENV !== 'production') return;
   const lockAcquired = await acquireLock();
   if (!lockAcquired) {
     console.log('Another instance is already processing filtered posts.');
