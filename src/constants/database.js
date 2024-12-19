@@ -6,7 +6,7 @@ exports.COLLECTION = {
   POSTS: 'posts',
   USERS: 'users',
   APPS: 'apps',
-  USER_WOBJECTS: 'user_wobjects',
+  USER_WOBJECTS: 'user_expertises',
   WOBJECTS: 'wobjects',
   SUBSCRIPTIONS: 'subscriptions',
   OBJECT_TYPES: 'objecttypes',
