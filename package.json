@@ -15,11 +15,11 @@
     "bignumber.js": "^9.1.1",
     "cron": "^2.1.0",
     "dotenv": "^10.0.0",
+    "ioredis": "^5.4.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "mongodb": "^4.9.1",
-    "noroutine": "0.0.7",
-    "redis": "^2.8.0"
+    "noroutine": "0.0.7"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
