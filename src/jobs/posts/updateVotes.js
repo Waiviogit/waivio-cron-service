@@ -8,7 +8,7 @@ const { REDIS_KEY } = require('../../constants/redis');
 const { TOKEN_WAIV } = require('../../constants/hiveEngine');
 const { parseJson } = require('../../helpers/jsonHelper');
 
-const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV'];
+const VOTE_FIELDS = ['voter', 'percent', 'rshares', 'rsharesWAIV', 'weight'];
 
 const postWithWaiv = (metadata) => {
   const parsed = parseJson(metadata);
@@ -78,11 +78,10 @@ const run = async () => {
             .chain(item)
             .merge(_.pick(
               _.find(postInDb.active_votes, { voter: item.voter }),
-              ['rsharesWAIV'],
+              ['rsharesWAIV', 'weight'],
             ))
             .pick(VOTE_FIELDS)
             .value(),
-          weight: Math.round(item.rshares * 1e-6),
         });
         return acc;
       },
