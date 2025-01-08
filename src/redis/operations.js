@@ -31,6 +31,14 @@ module.exports = (client) => ({
       return { error };
     }
   },
+  sismember: async ({ key, member }) => {
+    try {
+      const result = await client.sismember(key, member);
+      return { result: !!result };
+    } catch (error) {
+      return { error };
+    }
+  },
   zrevrange: async ({
     key, start, stop,
   }) => {
