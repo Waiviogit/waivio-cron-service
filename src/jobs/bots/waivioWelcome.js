@@ -74,6 +74,10 @@ const processFilteredPosts = async () => {
     const post = parseJson(postJson, null);
     if (!post) continue;
 
+    const { result: inGreyList } = await redis8
+      .sismember({ key: REDIS_KEY.GREY_LIST_KEY, member: post.author });
+    if (inGreyList) continue;
+
     const vote = {
       voter: process.env.WELCOME_BOT_NAME,
       author: post.author,

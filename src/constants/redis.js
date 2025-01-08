@@ -20,4 +20,5 @@ exports.REDIS_KEY = {
   REQUESTS_RATE_WARNING_LIMIT: 'requests:warning_limit',
   ENGINE_NODES_LIST: 'engine_nodes_list',
   CORS_WHITELIST: 'cors_whitelist',
+  GREY_LIST_KEY: 'vote_grey_list',
 };
