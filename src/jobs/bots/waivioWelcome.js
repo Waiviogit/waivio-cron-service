@@ -6,6 +6,7 @@ const { userModel } = require('../../database/models');
 const { hiveOperations } = require('../../utilities/hiveApi');
 const marketPools = require('../../utilities/hiveEngine/marketPools');
 const commentContract = require('../../utilities/hiveEngine/commentContract');
+const tokensContract = require('../../utilities/hiveEngine/tokensContract');
 const { REDIS_KEY } = require('../../constants/redis');
 const { getGeckoPrice } = require('../../helpers/congeckoHelper');
 const { TOKEN_WAIV } = require('../../constants/hiveEngine');
@@ -13,6 +14,7 @@ const { parseJson } = require('../../helpers/jsonHelper');
 
 const WELCOME_Q_NAME = 'posting_q_waivio_welcome';
 const LOCK_KEY = 'posting_q_waivio_welcome_lock';
+const MAX_WAIV_BALANCE = 100;
 
 const createMockPost = async ({ author, permlink }) => {
   const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
@@ -28,6 +30,29 @@ const createMockPost = async ({ author, permlink }) => {
     );
   }
 };
+
+const getWaivBalance = async (account) => {
+  const result = await tokensContract.getTokenBalances({ query: { symbol: 'WAIV', account } });
+  if (!result?.[0]) {
+    return {
+      balance: 0, stake: 0, delegationsOut: 0, pendingUnstake: 0, pendingUndelegations: 0,
+    };
+  }
+
+  return {
+    balance: parseFloat(result[0].balance),
+    stake: parseFloat(result[0].stake),
+    delegationsOut: parseFloat(result[0].delegationsOut),
+    pendingUnstake: parseFloat(result[0].pendingUnstake),
+    pendingUndelegations: parseFloat(result[0].pendingUndelegations),
+  };
+};
+
+const calcTotalWaiv = (balances) => _.reduce(balances, (acc, el) => {
+  if (Number.isNaN(el)) return acc;
+  acc += el;
+  return acc;
+}, 0);
 
 const acquireLock = async () => {
   const { result } = await redis8.set({
@@ -77,6 +102,12 @@ const processFilteredPosts = async () => {
     const { result: inGreyList } = await redis8
       .sismember({ key: REDIS_KEY.GREY_LIST_KEY, member: post.author });
     if (inGreyList) continue;
+    const postAuthorBalances = await getWaivBalance(post.author);
+    const totalWaiv = calcTotalWaiv(postAuthorBalances);
+    if (totalWaiv > MAX_WAIV_BALANCE) {
+      await redis8.sadd({ key: REDIS_KEY.GREY_LIST_KEY, member: post.author });
+      continue;
+    }
 
     const vote = {
       voter: process.env.WELCOME_BOT_NAME,
