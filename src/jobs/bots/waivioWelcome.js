@@ -55,7 +55,7 @@ const calcTotalWaiv = (balances) => _.reduce(balances, (acc, el) => {
 }, 0);
 
 const acquireLock = async () => {
-  const { result } = await redis8.set({
+  const { result } = await redis8.setWithMode({
     key: LOCK_KEY,
     data: 'locked',
     mode: 'NX',
