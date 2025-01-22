@@ -7,7 +7,15 @@ module.exports = (client) => ({
       return { error };
     }
   },
-  set: async ({ key, data, mode }) => {
+  set: async ({ key, data }) => {
+    try {
+      const result = await client.set(key, data);
+      return { result };
+    } catch (error) {
+      return { error };
+    }
+  },
+  setWithMode: async ({ key, data, mode = '' }) => {
     try {
       const result = await client.set(key, data, mode);
       return { result };
