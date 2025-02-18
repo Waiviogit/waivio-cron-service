@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const {
-  STATUSES, TEST_DOMAINS, FEE, PAYMENT_DESCRIPTION,
+  STATUSES, TEST_DOMAINS, FEE, PAYMENT_DESCRIPTION, BILLING_TYPE,
 } = require('../../constants/sitesConstants');
 const { OBJECT_BOT } = require('../../constants/requestData');
 const { appModel } = require('../../database/models');
@@ -21,24 +21,32 @@ const dailyDebt = async (timeout = 200) => {
         parent: 1,
         owner: 1,
         status: 1,
+        billingType: 1,
       },
     },
   });
   if (error) return sendError(error);
   for (const app of apps) {
-    if (!await checkForTestSites(app.parent)) continue;
+    const {
+      parent, host, owner, status, billingType,
+    } = app;
+    if (!await checkForTestSites(parent)) continue;
 
     /** Collect data for debt calculation */
 
-    const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
+    const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
     const countUsers = _.get(todayUsers, 'length', 0);
 
     const data = {
-      amount: calcDailyDebtInvoice({ countUsers, status: app.status }),
-      description: addDescriptionMessage(app.status),
-      userName: app.owner,
+      amount: calcDailyDebtInvoice({
+        countUsers,
+        status,
+        billingType,
+      }),
+      description: addDescriptionMessage(status),
+      userName: owner,
       countUsers,
-      host: app.host,
+      host,
     };
     const { error: createError } = await objectBotRequests.sendCustomJson(
       data,
@@ -46,13 +54,13 @@ const dailyDebt = async (timeout = 200) => {
       false,
     );
     if (createError) {
-      console.error(`Request for create invoice for host ${data.host} 
-      with amount ${data.amount}, daily users: ${data.countUsers} failed!`);
+      console.error(`Request for create invoice for host ${host} 
+      with amount ${data.amount}, daily users: ${countUsers} failed!`);
       await sendError(Object.assign(createError, data));
       continue;
     }
 
-    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
+    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
     await new Promise((resolve) => setTimeout(resolve, timeout));
   }
 };
@@ -111,7 +119,8 @@ const dailySuspendedDebt = async (timeout = 200) => {
   }
 };
 
-const calcDailyDebtInvoice = ({ countUsers, status }) => {
+const calcDailyDebtInvoice = ({ countUsers, status, billingType }) => {
+  if (billingType === BILLING_TYPE.PAYPAL_SUBSCRIPTION) return 0;
   if (status === STATUSES.ACTIVE) {
     return countUsers * FEE.perUser < FEE.minimumValue
       ? FEE.minimumValue

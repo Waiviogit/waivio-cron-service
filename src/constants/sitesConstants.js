@@ -56,3 +56,8 @@ exports.INACTIVE_STATUSES = [
   this.STATUSES.INACTIVE,
   this.STATUSES.PENDING,
 ];
+
+exports.BILLING_TYPE = {
+  CRYPTO: 'crypto',
+  PAYPAL_SUBSCRIPTION: 'paypal_subscription',
+};
