@@ -161,7 +161,7 @@ const incrementWebsitesSuspended = async ({ key, expire }) => {
 const getMessage = async ({ remainingDays, paid, owner }) => {
   if (paid < 0) {
     const suspendedDays = await incrementWebsitesSuspended({ key: owner, expire: 3600 * 25 });
-    if (suspendedDays < 8) return NOTIFICATION.SUSPENDED;
+    if (suspendedDays < 100) return NOTIFICATION.SUSPENDED;
     return '';
   }
 
