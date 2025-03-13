@@ -26,8 +26,6 @@ const dailyDebt = async (timeout = 200) => {
   });
   if (error) return sendError(error);
   for (const app of apps) {
-    if (!await checkForTestSites(app.parent)) continue;
-
     /** Collect data for debt calculation */
 
     const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
@@ -85,8 +83,6 @@ const dailySuspendedDebt = async (timeout = 200) => {
   });
   if (error) return sendError(error);
   for (const app of apps) {
-    if (!await checkForTestSites(app.parent)) continue;
-
     const data = {
       description: addDescriptionMessage(app.status),
       amount: FEE.perInactive,
