@@ -43,6 +43,7 @@ const dailyDebt = async (timeout = 200) => {
       `${OBJECT_BOT.HOST}${OBJECT_BOT.BASE_URL}${OBJECT_BOT.SEND_INVOICE}`,
       false,
     );
+    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
     if (createError) {
       console.error(`Request for create invoice for host ${data.host} 
       with amount ${data.amount}, daily users: ${data.countUsers} failed!`);
@@ -50,7 +51,6 @@ const dailyDebt = async (timeout = 200) => {
       continue;
     }
 
-    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
     await new Promise((resolve) => setTimeout(resolve, timeout));
   }
 };
