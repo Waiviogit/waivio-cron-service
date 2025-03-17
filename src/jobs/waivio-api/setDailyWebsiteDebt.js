@@ -30,7 +30,6 @@ const dailyDebt = async (timeout = 200) => {
     const {
       parent, host, owner, status, billingType,
     } = app;
-    if (!await checkForTestSites(parent)) continue;
 
     /** Collect data for debt calculation */
 
@@ -53,6 +52,7 @@ const dailyDebt = async (timeout = 200) => {
       `${OBJECT_BOT.HOST}${OBJECT_BOT.BASE_URL}${OBJECT_BOT.SEND_INVOICE}`,
       false,
     );
+    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
     if (createError) {
       console.error(`Request for create invoice for host ${host} 
       with amount ${data.amount}, daily users: ${countUsers} failed!`);
@@ -60,7 +60,6 @@ const dailyDebt = async (timeout = 200) => {
       continue;
     }
 
-    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
     await new Promise((resolve) => setTimeout(resolve, timeout));
   }
 };
@@ -93,8 +92,6 @@ const dailySuspendedDebt = async (timeout = 200) => {
   });
   if (error) return sendError(error);
   for (const app of apps) {
-    if (!await checkForTestSites(app.parent)) continue;
-
     const data = {
       description: addDescriptionMessage(app.status),
       amount: FEE.perInactive,

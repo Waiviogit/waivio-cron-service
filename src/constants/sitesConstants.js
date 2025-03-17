@@ -49,6 +49,7 @@ exports.PAYMENT_TYPES = {
   TRANSFER: 'transfer',
   WRITE_OFF: 'writeOff',
   REFUND: 'refund',
+  CREDIT: 'credit', // special type admin can give credits to site
 };
 
 exports.INACTIVE_STATUSES = [
