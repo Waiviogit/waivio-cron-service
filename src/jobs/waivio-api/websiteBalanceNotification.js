@@ -52,9 +52,9 @@ const getWebsiteData = (payments, site) => {
   };
 };
 
-const getSumByPaymentType = (payments, type) => _
+const getSumByPaymentType = (payments, types) => _
   .chain(payments)
-  .filter((el) => el.type === type)
+  .filter((el) => types.includes(el.type))
   .reduce((acc, payment) => new BigNumber(payment.amount).plus(acc), new BigNumber(0))
   .value();
 
@@ -114,8 +114,8 @@ const getManagePage = async ({ userName }) => {
   const accountBalance = {
     paid: 0, avgDau: 0, dailyCost: 0, remainingDays: 0,
   };
-  accountBalance.paid = getSumByPaymentType(payments, PAYMENT_TYPES.TRANSFER)
-    .minus(getSumByPaymentType(payments, PAYMENT_TYPES.WRITE_OFF))
+  accountBalance.paid = getSumByPaymentType(payments, [PAYMENT_TYPES.TRANSFER, PAYMENT_TYPES.CREDIT])
+    .minus(getSumByPaymentType(payments, [PAYMENT_TYPES.WRITE_OFF]))
     .toNumber();
 
   const dataForPayments = await getPaymentsData();
