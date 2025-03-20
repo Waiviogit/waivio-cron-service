@@ -3,7 +3,7 @@ const BigNumber = require('bignumber.js');
 const axios = require('axios');
 const moment = require('moment');
 const {
-  NOTIFICATION, FEE, PAYMENT_TYPES, INACTIVE_STATUSES,
+  NOTIFICATION, FEE, PAYMENT_TYPES, INACTIVE_STATUSES, BILLING_TYPE,
 } = require('../../constants/sitesConstants');
 const { appModel, userModel, websitePaymentsModel } = require('../../database/models');
 const { REDIS_KEY } = require('../../constants/redis');
@@ -31,6 +31,7 @@ const sendNotification = async (reqData) => {
 const getDailyCost = (websites) => _
   .reduce(websites, (acc, site) => {
     if (_.includes(INACTIVE_STATUSES, site.status)) return BigNumber(FEE.perInactive).plus(acc);
+    if (site.billingType === BILLING_TYPE.PAYPAL_SUBSCRIPTION) return acc;
     return site.averageDau < FEE.minimumValue / FEE.perUser
       ? BigNumber(FEE.minimumValue).plus(acc)
       : BigNumber(site.averageDau).multipliedBy(FEE.perUser).plus(acc);
