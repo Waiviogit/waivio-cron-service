@@ -60,8 +60,14 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
-    insertOne: async ({ doc }) => {
+    insertOne: async ({ doc, timestamps = false }) => {
       try {
+        if (timestamps) {
+          const now = new Date();
+          doc.createdAt = now;
+          doc.updatedAt = now;
+        }
+
         const result = await collection.insertOne(doc);
         return { result };
       } catch (error) {
