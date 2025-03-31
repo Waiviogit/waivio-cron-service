@@ -21,4 +21,6 @@ exports.REDIS_KEY = {
   ENGINE_NODES_LIST: 'engine_nodes_list',
   CORS_WHITELIST: 'cors_whitelist',
   GREY_LIST_KEY: 'vote_grey_list',
+  SITES_ACTION_UNIQ: 'sites_action_uniq',
+  SITES_ACTION_TOTAL: 'sites_action_total',
 };

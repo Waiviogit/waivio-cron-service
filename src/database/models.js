@@ -5,6 +5,7 @@ module.exports = {
   postModel: collection({ collectionName: COLLECTION.POSTS, dbName: DATABASE.WAIVIO }),
   userModel: collection({ collectionName: COLLECTION.USERS, dbName: DATABASE.WAIVIO }),
   appModel: collection({ collectionName: COLLECTION.APPS, dbName: DATABASE.WAIVIO }),
+  siteStatisticModel: collection({ collectionName: COLLECTION.WEBSITE_STATISTIC, dbName: DATABASE.WAIVIO }),
   userWobjectsModel: collection({ collectionName: COLLECTION.USER_WOBJECTS, dbName: DATABASE.WAIVIO }),
   wobjectModel: collection({ collectionName: COLLECTION.WOBJECTS, dbName: DATABASE.WAIVIO }),
   subscriptionModel: collection({ collectionName: COLLECTION.SUBSCRIPTIONS, dbName: DATABASE.WAIVIO }),

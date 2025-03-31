@@ -3,7 +3,7 @@ const {
   STATUSES, TEST_DOMAINS, FEE, PAYMENT_DESCRIPTION, BILLING_TYPE,
 } = require('../../constants/sitesConstants');
 const { OBJECT_BOT } = require('../../constants/requestData');
-const { appModel } = require('../../database/models');
+const { appModel, siteStatisticModel } = require('../../database/models');
 const { redis11 } = require('../../redis');
 const { REDIS_KEY } = require('../../constants/redis');
 const { objectBotRequests } = require('../../utilities/objectBot');
@@ -33,9 +33,7 @@ const dailyDebt = async (timeout = 200) => {
 
     /** Collect data for debt calculation */
 
-    const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
-    const countUsers = _.get(todayUsers, 'length', 0);
-
+    const countUsers = await getDailyVisitorsByHost(host);
     const data = {
       amount: calcDailyDebtInvoice({
         countUsers,
@@ -52,7 +50,12 @@ const dailyDebt = async (timeout = 200) => {
       `${OBJECT_BOT.HOST}${OBJECT_BOT.BASE_URL}${OBJECT_BOT.SEND_INVOICE}`,
       false,
     );
-    await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${app.host}` });
+    await createSiteStatisticRecord({
+      visits: countUsers,
+      host,
+    });
+
+    await deleteVisitorsByHost(host);
     if (createError) {
       console.error(`Request for create invoice for host ${host} 
       with amount ${data.amount}, daily users: ${countUsers} failed!`);
@@ -116,6 +119,53 @@ const dailySuspendedDebt = async (timeout = 200) => {
   }
 };
 
+const getDailyVisitorsByHost = async (host) => {
+  const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
+  return todayUsers?.length || 0;
+};
+
+const getBuyActionByHost = async (host) => {
+  const { result: actions } = await redis11.get({ key: `${REDIS_KEY.SITES_ACTION_TOTAL}:${host}` });
+  if (actions) return parseFloat(actions);
+  return 0;
+};
+
+const getUniqActionByHost = async (host) => {
+  const { result: actions } = await redis11.smembers({ key: `${REDIS_KEY.SITES_ACTION_UNIQ}:${host}` });
+  return actions?.length || 0;
+};
+
+const deleteSiteActionsByHost = async (host) => {
+  await redis11.del({ key: `${REDIS_KEY.SITES_ACTION_TOTAL}:${host}` });
+  await redis11.del({ key: `${REDIS_KEY.SITES_ACTION_UNIQ}:${host}` });
+};
+
+const deleteVisitorsByHost = async (host) => {
+  await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
+};
+
+const createSiteStatisticRecord = async ({ visits, host }) => {
+  let buyAction = 0, buyActionUniq = 0, conversion = 0;
+  if (visits !== 0) {
+    buyAction = await getBuyActionByHost(host);
+    buyActionUniq = await getUniqActionByHost(host);
+    conversion = (buyAction * 100) / visits;
+  }
+
+  await siteStatisticModel.insertOne({
+    doc: {
+      host,
+      visits,
+      buyAction,
+      buyActionUniq,
+      conversion,
+    },
+    timestamps: true,
+  });
+
+  await deleteSiteActionsByHost(host);
+};
+
 const calcDailyDebtInvoice = ({ countUsers, status, billingType }) => {
   if (billingType === BILLING_TYPE.PAYPAL_SUBSCRIPTION) return 0;
   if (status === STATUSES.ACTIVE) {
@@ -131,9 +181,30 @@ const addDescriptionMessage = (status) => {
   return PAYMENT_DESCRIPTION.RESERVATION;
 };
 
+const mainStatistic = async () => {
+  const { result: apps, error } = await appModel.find({
+    filter: {
+      inherited: false,
+      status: STATUSES.ACTIVE,
+    },
+    options: {
+      projection: { host: 1 },
+    },
+  });
+  if (error) return sendError(error);
+
+  for (const app of apps) {
+    const { host } = app;
+    const visits = await getDailyVisitorsByHost(host);
+    await createSiteStatisticRecord({ visits, host });
+    await deleteVisitorsByHost(host);
+  }
+};
+
 const run = async () => {
   await dailySuspendedDebt();
   await dailyDebt();
+  await mainStatistic();
 };
 
 module.exports = {
