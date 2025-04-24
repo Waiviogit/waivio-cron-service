@@ -145,11 +145,12 @@ const deleteVisitorsByHost = async (host) => {
 };
 
 const createSiteStatisticRecord = async ({ visits, host }) => {
-  let buyAction = 0, buyActionUniq = 0, conversion = 0;
+  let buyAction = 0, buyActionUniq = 0, conversion = 0, conversionUniq = 0;
   if (visits !== 0) {
     buyAction = await getBuyActionByHost(host);
     buyActionUniq = await getUniqActionByHost(host);
     conversion = (buyAction * 100) / visits;
+    conversionUniq = (buyActionUniq * 100) / visits;
   }
 
   await siteStatisticModel.insertOne({
@@ -159,6 +160,7 @@ const createSiteStatisticRecord = async ({ visits, host }) => {
       buyAction,
       buyActionUniq,
       conversion,
+      conversionUniq,
     },
     timestamps: true,
   });
