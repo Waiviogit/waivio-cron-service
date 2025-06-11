@@ -170,10 +170,14 @@ const createSiteStatisticRecord = async ({ visits, host }) => {
 
 const calcDailyDebtInvoice = ({ countUsers, status, billingType }) => {
   if (billingType === BILLING_TYPE.PAYPAL_SUBSCRIPTION) return 0;
+
   if (status === STATUSES.ACTIVE) {
-    return countUsers * FEE.perUser < FEE.minimumValue
-      ? FEE.minimumValue
-      : _.round(countUsers * FEE.perUser, 3);
+    // we cant rely on users count so minimumValue for now
+
+    // return countUsers * FEE.perUser < FEE.minimumValue
+    //   ? FEE.minimumValue
+    //   : _.round(countUsers * FEE.perUser, 3);
+    return FEE.minimumValue;
   }
   return FEE.perInactive;
 };
