@@ -19,6 +19,7 @@ const {
   ratesJob,
   hiveEngineNodeJob,
   apiSetActiveSites,
+  apiGoodUrlHash,
 } = require('./jobs');
 
 updatePostVotesJob.start();
@@ -40,6 +41,8 @@ apiUpdateTopObjects.start();
 apiUpdatePostsCount.start();
 apiUpdateWaivioAdmins.start();
 apiWebsiteBalanceNotification.start();
+apiGoodUrlHash.start();
+
 hiveNodeJob.start();
 ratesJob.start();
 hiveEngineNodeJob.start();

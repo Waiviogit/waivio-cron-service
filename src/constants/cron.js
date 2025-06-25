@@ -21,4 +21,5 @@ exports.SCHEDULE = {
   RPM_CHECK: '*/5 * * * *',
   HIVE_ENGINE_CHECK: '*/1 * * * *',
   SET_ACTIVE_SITES: '*/5 * * * *',
+  SAFE_SITE_UPDATE: '0 10 */3 * *',
 };
