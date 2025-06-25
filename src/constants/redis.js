@@ -23,4 +23,5 @@ exports.REDIS_KEY = {
   GREY_LIST_KEY: 'vote_grey_list',
   SITES_ACTION_UNIQ: 'sites_action_uniq',
   SITES_ACTION_TOTAL: 'sites_action_total',
+  SAFE_SITE_PREFIX_DATA: 'safe_site_prefix_data',
 };

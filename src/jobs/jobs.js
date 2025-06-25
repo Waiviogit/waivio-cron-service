@@ -16,6 +16,7 @@ const updateWaivioAdmins = require('./waivio-api/updateWaivioAdmins');
 const websiteBalanceNotification = require('./waivio-api/websiteBalanceNotification');
 const updateSiteWobjects = require('./waivio-api/updateSiteWobjects');
 const setActiveSites = require('./waivio-api/setActiveSites');
+const goodUrlHash = require('./waivio-api/goodUrlHash');
 const checkHiveNode = require('./nodes/checkHiveNode');
 const checkHiveEngineNodes = require('./nodes/checkHiveEngineNodes');
 const apiReqRates = require('./rates/apiReqRates');
@@ -185,6 +186,23 @@ const apiWebsiteBalanceNotification = new CronJob(
   null,
   false,
 );
+
+const apiGoodUrlHash = new CronJob(
+  SCHEDULE.SAFE_SITE_UPDATE,
+  async () => {
+    try {
+      await goodUrlHash.run();
+    } catch (error) {
+      console.log(`apiGoodUrlHash ${error.message}`);
+    }
+  },
+  null,
+  false,
+  null,
+  null,
+  true,
+);
+
 // endregion
 
 // region nodes
@@ -237,4 +255,5 @@ module.exports = {
   ratesJob,
   hiveEngineNodeJob,
   apiSetActiveSites,
+  apiGoodUrlHash,
 };
