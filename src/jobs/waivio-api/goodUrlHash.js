@@ -84,7 +84,9 @@ const cacheGoodUrls = async () => {
       host: APP_HOST,
     },
     options: {
-      authority: 1,
+      projection: {
+        authority: 1,
+      },
     },
   });
 
@@ -124,7 +126,9 @@ const cacheGoodUrls = async () => {
       ],
     },
     options: {
-      host: 1,
+      projection: {
+        host: 1,
+      },
     },
   });
 
