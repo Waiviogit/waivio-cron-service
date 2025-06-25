@@ -1,5 +1,4 @@
 const { CronJob } = require('cron');
-const noroutine = require('noroutine');
 const updateVotes = require('./posts/updateVotes');
 const updateChildren = require('./posts/updateChildren');
 const waivioWelcome = require('./bots/waivioWelcome');
