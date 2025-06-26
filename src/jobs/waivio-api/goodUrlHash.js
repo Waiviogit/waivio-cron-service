@@ -21,18 +21,9 @@ const REMOVE_OBJ_STATUSES = [
 // Normalize domain for consistent hashing
 const normalizeDomain = (domain) => domain.toLowerCase().trim();
 
-// Extract base domain (remove subdomains)
-const getBaseDomain = (hostname) => {
-  const normalized = normalizeDomain(hostname);
-  const parts = normalized.split('.');
-  if (parts.length <= 2) return normalized;
-  return parts.slice(-2).join('.');
-};
-
 // Create hash prefix as bytes (not hex string)
 const getHashPrefixBytes = (host, prefixLen = 6) => {
-  const normalized = normalizeDomain(host);
-  const baseDomain = getBaseDomain(normalized);
+  const baseDomain = normalizeDomain(host);
   const hash = crypto.createHash('sha256').update(baseDomain).digest();
   return hash.slice(0, prefixLen); // Return actual bytes
 };
@@ -71,7 +62,11 @@ const getHostFromUrl = (url = '') => {
     cleanUrl = cleanUrl.replace(/[*.,;:!?)\]}>"']+$/, '');
 
     const urlObj = new URL(cleanUrl);
-    return urlObj.hostname;
+
+    const { hostname } = urlObj;
+
+    if (hostname.startsWith('www.')) return hostname.replace('www.', '');
+    return hostname;
   } catch (error) {
     console.log(`Failed to parse URL: ${url}`, error.message);
     return null;
@@ -114,6 +109,7 @@ const cacheGoodUrls = async () => {
 
   const { result: apps = [] } = await appModel.find({
     filter: {
+      status: 'active',
       $or: [
         {
           canBeExtended: false,
