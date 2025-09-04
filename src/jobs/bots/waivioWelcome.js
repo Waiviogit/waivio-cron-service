@@ -186,9 +186,9 @@ const getUsersFromPostsList = async ({ posts }) => {
     options: { projection: { [TOKEN_WAIV.EXPERTISE_FIELD]: 1, name: 1 } },
   });
   if (!users.length) {
-    console.error('problems with user request');
+    console.error(`${WELCOME_JOB_NAME} problems with user request`);
   }
-  console.log(`users filter: ${users.length}`);
+  console.log(`${WELCOME_JOB_NAME} users filter: ${users.length}`);
 
   return users;
 };
@@ -212,8 +212,10 @@ const filterPosts = ({ posts, users, voted }) => _
 const getValidRecords = async () => {
   const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
   const postsKey = `${REDIS_KEY.DISTRIBUTE_HIVE_ENGINE_REWARD}:${TOKEN_WAIV.SYMBOL}:${threeDaysAgo}`;
+  console.log(`${WELCOME_JOB_NAME} records key: ${postsKey}`);
 
   const { result: records } = await redis8.smembers({ key: postsKey });
+  console.log(`${WELCOME_JOB_NAME} valid records length ${records?.length || 0}`);
   return _.map(records, (el) => ({ author: el.split('/')[0], permlink: el.split('/')[1] }));
 };
 
