@@ -16,6 +16,8 @@ const WELCOME_Q_NAME = 'posting_q_waivio_welcome';
 const LOCK_KEY = 'posting_q_waivio_welcome_lock';
 const MAX_WAIV_BALANCE = 100;
 
+const WELCOME_JOB_NAME = '[WELCOME BOT]';
+
 const createMockPost = async ({ author, permlink }) => {
   const threeDaysAgo = moment.utc().subtract(3, 'days').startOf('day').format();
   const postsKey = `${REDIS_KEY.DISTRIBUTE_HIVE_ENGINE_REWARD}:${TOKEN_WAIV.SYMBOL}:${threeDaysAgo}`;
@@ -71,18 +73,18 @@ const processFilteredPosts = async () => {
   if (process.env.NODE_ENV !== 'production') return;
   const lockAcquired = await acquireLock();
   if (!lockAcquired) {
-    console.log('Another instance is already processing filtered posts.');
+    console.log(`${WELCOME_JOB_NAME}Another instance is already processing filtered posts.`);
     return;
   }
 
   let spentWeight = 0;
 
-  console.log('Starting WELCOME voting...');
+  console.log(`${WELCOME_JOB_NAME} Starting WELCOME voting...`);
 
   while (spentWeight < TOKEN_WAIV.WELCOME_DAILY_WEIGHT) {
     const { result: totalPostsCount } = await redis8.llen({ key: WELCOME_Q_NAME });
     if (totalPostsCount === 0) {
-      console.log('No more posts to process.');
+      console.log(`${WELCOME_JOB_NAME} No more posts to process.`);
       break;
     }
 
@@ -97,14 +99,21 @@ const processFilteredPosts = async () => {
     }
 
     const post = parseJson(postJson, null);
-    if (!post) continue;
+    if (!post) {
+      console.log(`${WELCOME_JOB_NAME}: error parsing post`);
+      continue;
+    }
 
     const { result: inGreyList } = await redis8
       .sismember({ key: REDIS_KEY.GREY_LIST_KEY, member: post.author });
-    if (inGreyList) continue;
+    if (inGreyList) {
+      console.log(`${WELCOME_JOB_NAME}: author ${post.author} is in grey list`);
+      continue;
+    }
     const postAuthorBalances = await getWaivBalance(post.author);
     const totalWaiv = calcTotalWaiv(postAuthorBalances);
     if (totalWaiv > MAX_WAIV_BALANCE) {
+      console.log(`${WELCOME_JOB_NAME}: author ${post.author} totalWaiv (${totalWaiv}) > MAX_WAIV_BALANCE adding to grey list`);
       await redis8.sadd({ key: REDIS_KEY.GREY_LIST_KEY, member: post.author });
       continue;
     }
@@ -223,11 +232,12 @@ const addPostToQ = async ({ post }) => {
     key: WELCOME_Q_NAME,
     elements: JSON.stringify(post),
   });
+  console.log(`${WELCOME_JOB_NAME}: ${post.author}/${post.permlink} added to queue`);
 };
 
 const run = async () => {
   if (process.env.NODE_ENV !== 'production') return;
-  console.log('start WELCOME job');
+  console.log(`${WELCOME_JOB_NAME}: start WELCOME job`);
 
   const posts = await getValidRecords();
   if (_.isEmpty(posts)) return;
@@ -236,7 +246,7 @@ const run = async () => {
   const filteredPosts = filterPosts({ posts, users, voted });
 
   if (_.isEmpty(filteredPosts)) {
-    console.log('filteredPosts empty');
+    console.log(`${WELCOME_JOB_NAME}: filteredPosts empty`);
     return;
   }
 
