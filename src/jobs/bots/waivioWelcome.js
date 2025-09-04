@@ -181,9 +181,14 @@ const getUsersFromPostsList = async ({ posts }) => {
   const { result: users } = await userModel.find({
     filter: {
       name: { $in: _.uniq(_.map(posts, 'author')) },
-      [TOKEN_WAIV.EXPERTISE_FIELD]: { $lt: rsharesFilter },
+      // old logic
+      $or: [
+        { expertiseWAIV: { $lt: rsharesFilter } },
+        { expertiseWAIV: null },
+        { expertiseWAIV: { $exists: false } },
+      ],
     },
-    options: { projection: { [TOKEN_WAIV.EXPERTISE_FIELD]: 1, name: 1 } },
+    options: { projection: { name: 1 } },
   });
   if (!users.length) {
     console.error(`${WELCOME_JOB_NAME} problems with user request`);
@@ -225,7 +230,6 @@ const getVotedPosts = async () => {
     start: 0,
     stop: -1,
   });
-
   return voted;
 };
 
