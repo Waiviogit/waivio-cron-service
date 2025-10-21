@@ -4,9 +4,10 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "addWebsiteStatisticMissingTimestamps": "node ./src/cli/addWebsiteStatisticMissingTimestamps.js"
   },
   "dependencies": {
     "@hiveio/dhive": "^1.1.0",

@@ -80,10 +80,15 @@ module.exports = ({ collectionName, dbName }) => {
         return { error };
       }
     },
-    insertOne: async ({ doc, options = {} }) => {
+    insertOne: async ({ doc, timestamps }) => {
       try {
+        if (timestamps) {
+          const now = new Date();
+          doc.createdAt = now;
+          doc.updatedAt = now;
+        }
         const collection = getCollection();
-        const result = await collection.insertOne(doc, options);
+        const result = await collection.insertOne(doc);
         return { result };
       } catch (error) {
         console.error('MongoDB insertOne error:', error);
