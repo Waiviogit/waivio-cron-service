@@ -4,7 +4,7 @@ const {
 } = require('../../constants/sitesConstants');
 const { OBJECT_BOT } = require('../../constants/requestData');
 const { appModel, siteStatisticModel } = require('../../database/models');
-const { redis11 } = require('../../redis');
+const { redis11, redis2 } = require('../../redis');
 const { REDIS_KEY } = require('../../constants/redis');
 const { objectBotRequests } = require('../../utilities/objectBot');
 const { sendError } = require('../../helpers/sentryHelper');
@@ -120,7 +120,7 @@ const dailySuspendedDebt = async (timeout = 200) => {
 };
 
 const getDailyVisitorsByHost = async (host) => {
-  const { result: todayUsers } = await redis11.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
+  const { result: todayUsers } = await redis2.smembers({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
   return todayUsers?.length || 0;
 };
 
@@ -141,7 +141,7 @@ const deleteSiteActionsByHost = async (host) => {
 };
 
 const deleteVisitorsByHost = async (host) => {
-  await redis11.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
+  await redis2.del({ key: `${REDIS_KEY.SITE_USERS_STATISTIC}:${host}` });
 };
 
 const createSiteStatisticRecord = async ({ visits, host }) => {
@@ -172,11 +172,6 @@ const calcDailyDebtInvoice = ({ countUsers, status, billingType }) => {
   if (billingType === BILLING_TYPE.PAYPAL_SUBSCRIPTION) return 0;
 
   if (status === STATUSES.ACTIVE) {
-    // we cant rely on users count so minimumValue for now
-
-    // return countUsers * FEE.perUser < FEE.minimumValue
-    //   ? FEE.minimumValue
-    //   : _.round(countUsers * FEE.perUser, 3);
     return FEE.minimumValue;
   }
   return FEE.perInactive;

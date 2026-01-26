@@ -10,7 +10,7 @@ exports.REDIS_KEY = {
   TOP_WOBJ_USERS_KEY: 'topUsers',
   IMPORTED_USER: 'import_user:',
   IMPORTED_USER_ERROR: 'import_user_error:',
-  SITE_USERS_STATISTIC: 'siteUsers',
+  SITE_USERS_STATISTIC: 'aid_active',
   WAIVIO_ADMINS: 'waivio_admins',
   WEBSITE_SUSPENDED_COUNT: 'website_suspended_count',
   BLOCK: 'test:hive:blocks',
